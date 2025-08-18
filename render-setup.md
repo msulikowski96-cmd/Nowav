@@ -1,80 +1,88 @@
 
-# 🚀 CV Optimizer Pro - Render Deployment Guide
+# 🚀 CV Optimizer Pro - Deployment na Render
 
-## Prerequisites
+## 📋 Wymagania przed deploymentem
 
-1. **GitHub Repository** - Kod musi być w repozytorium GitHub
-2. **Render Account** - Utwórz konto na https://render.com
-3. **Neon Database** - PostgreSQL database (darmowy plan)
+### 1. 🔑 Przygotuj klucze API
 
-## Krok 1: Przygotowanie bazy danych
+Upewnij się, że masz:
+- **OpenRouter API Key**: https://openrouter.ai/
+- **Stripe API Keys**: https://dashboard.stripe.com/test/apikeys
+- **PostgreSQL Database**: Stwórz bazę na Render lub użyj zewnętrznej
 
-1. Utwórz konto na https://neon.tech
-2. Stwórz nową bazę PostgreSQL
-3. Skopiuj connection string (DATABASE_URL)
-
-## Krok 2: Konfiguracja na Render
-
-1. **Połącz GitHub** - Autoryzuj Render z GitHub
-2. **Utwórz nowy Web Service**:
-   - Repository: wybierz swoje repo
-   - Branch: main
-   - Runtime: Python 3
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `gunicorn app:create_app() --config gunicorn.conf.py`
-
-## Krok 3: Environment Variables
-
-W panelu Render dodaj następujące zmienne:
+### 2. 📁 Struktura projektu
 
 ```
+cv-optimizer-pro/
+├── app.py                 # Główna aplikacja Flask
+├── requirements.txt       # Dependencies Pythona
+├── runtime.txt           # Wersja Pythona
+├── Procfile              # Komendy uruchomieniowe
+├── render.yaml           # Konfiguracja Render
+├── gunicorn.conf.py      # Konfiguracja serwera
+└── utils/                # Moduły pomocnicze
+```
+
+## 🚀 Kroki deploymentu na Render
+
+### Krok 1: Przygotuj repozytorium
+```bash
+git add .
+git commit -m "Prepare for Render deployment"
+git push origin main
+```
+
+### Krok 2: Stwórz aplikację na Render
+1. Idź na https://render.com
+2. Kliknij "New" → "Web Service"
+3. Połącz z Twoim repozytorium GitHub
+
+### Krok 3: Konfiguracja na Render
+- **Name**: `cv-optimizer-pro`
+- **Environment**: `Python 3`
+- **Build Command**: Auto-detect (używa render.yaml)
+- **Start Command**: Auto-detect (używa Procfile)
+
+### Krok 4: Dodaj zmienne środowiskowe
+
+W sekcji "Environment Variables" dodaj:
+
+```
+OPENROUTER_API_KEY=sk-or-v1-your-actual-key-here
+STRIPE_SECRET_KEY=sk_test_your-stripe-secret-key
+VITE_STRIPE_PUBLIC_KEY=pk_test_your-stripe-public-key
+SECRET_KEY=your-super-secret-key-production
+SESSION_SECRET=your-session-secret-key
+ENCRYPTION_KEY=your-base64-encryption-key
+DATABASE_URL=postgresql://user:pass@host:port/database
 FLASK_ENV=production
 DEBUG=false
-PYTHONUNBUFFERED=1
-WEB_CONCURRENCY=2
-
-# Database
-DATABASE_URL=postgresql://[your-neon-connection-string]
-
-# Security
-SECRET_KEY=[generate-random-secret-key]
-SESSION_SECRET=[generate-random-session-secret]
-ENCRYPTION_KEY=[generate-base64-encryption-key]
-
-# APIs
-OPENROUTER_API_KEY=[your-openrouter-key]
-STRIPE_SECRET_KEY=[your-stripe-secret-key]
-VITE_STRIPE_PUBLIC_KEY=[your-stripe-public-key]
+PORT=10000
 ```
 
-## Krok 4: Deploy
+### Krok 5: Deploy!
+- Kliknij "Create Web Service"
+- Render automatycznie zbuiluje i uruchomi aplikację
 
-1. Kliknij **Deploy**
-2. Poczekaj na zakończenie procesu (5-10 minut)
-3. Aplikacja będzie dostępna pod URL Render
+## 🔗 Po deploymencie
 
-## Weryfikacja
+Twoja aplikacja będzie dostępna pod adresem:
+`https://cv-optimizer-pro.onrender.com`
 
-- Sprawdź logi w panelu Render
-- Odwiedź endpoint `/test` aby sprawdzić status
-- Zaloguj się kontem `developer` / `NewDev2024!`
+## 🐛 Troubleshooting
 
-## Rozwiązywanie problemów
+### Problem z bibliotekami
+Jeśli wystąpią błędy z bibliotekami, sprawdź logi i zmodyfikuj `requirements.txt`
 
-### Błędy bazy danych
-- Sprawdź poprawność DATABASE_URL
-- Upewnij się, że Neon database jest aktywny
+### Problem z bazą danych
+Sprawdź czy `DATABASE_URL` jest poprawnie ustawiony
 
-### Błędy importów
-- Sprawdź czy wszystkie dependencje są w requirements.txt
-- Sprawdź logi build w panelu Render
+### Problem z kluczami API
+Sprawdź czy wszystkie klucze są ustawione w Environment Variables
 
-### Timeouty
-- Zwiększ timeout w gunicorn.conf.py
-- Zoptymalizuj zapytania do bazy danych
+## 📞 Wsparcie
 
-## Monitoring
-
-- Render automatycznie monitoruje aplikację
-- Logi są dostępne w czasie rzeczywistym
-- Auto-restart w przypadku crashy
+W razie problemów sprawdź:
+1. Logi w panelu Render
+2. Zmienne środowiskowe
+3. Status bazy danych

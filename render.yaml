@@ -2,42 +2,41 @@
 services:
   - type: web
     name: cv-optimizer-pro
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:create_app() --config gunicorn.conf.py
+    env: python
     plan: free
-    region: oregon
-    branch: main
-    healthCheckPath: /
-    disk:
-      name: cv-optimizer-disk
-      sizeGB: 1
-      mountPath: /tmp
+    # Build Command - install system dependencies first
+    buildCommand: |
+      apt-get update && apt-get install -y \
+        build-essential \
+        python3-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        zlib1g-dev \
+        libjpeg-dev \
+        libpng-dev \
+        libfreetype6-dev \
+        pkg-config \
+        libffi-dev \
+        libssl-dev \
+        libmagic-dev \
+        poppler-utils \
+        tesseract-ocr \
+        tesseract-ocr-pol \
+        tesseract-ocr-eng && \
+      pip install --upgrade pip setuptools wheel && \
+      pip install -r requirements.txt
+    # Start Command
+    startCommand: "gunicorn --config gunicorn.conf.py app:app"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
       - key: FLASK_ENV
         value: production
       - key: DEBUG
         value: false
-      - key: PYTHONUNBUFFERED
-        value: "1"
-      - key: WEB_CONCURRENCY
-        value: "2"
-      - key: OPENROUTER_API_KEY
-        sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: VITE_STRIPE_PUBLIC_KEY
-        sync: false
-      - key: SECRET_KEY
-        sync: false
-      - key: SESSION_SECRET
-        sync: false
-      - key: DATABASE_URL
-        sync: false
-      - key: ENCRYPTION_KEY
-        sync: false
-
-  - type: pserv
-    name: cv-optimizer-db
-    plan: free
-    region: oregon
+      - key: PORT
+        value: 10000
+      - key: UPLOAD_FOLDER
+        value: /tmp/uploads
+      - key: MAX_CONTENT_LENGTH
+        value: 16777216

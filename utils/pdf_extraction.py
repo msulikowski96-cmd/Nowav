@@ -1,6 +1,8 @@
 import logging
 import os
 import PyPDF2
+from docx import Document
+from PIL import Image
 import io
 
 def extract_text(pdf_path):
@@ -18,36 +20,15 @@ def extract_text(pdf_path):
 
 logger = logging.getLogger(__name__)
 
-def extract_text_from_pdf(pdf_path):
-    """
-    Extracts text from a PDF file using PDFMiner.
-    
-    Args:
-        pdf_path (str): Path to the PDF file
-        
-    Returns:
-        str: Extracted text from the PDF
-        
-    Raises:
-        Exception: If there's an error during extraction
-    """
+def extract_text_from_pdf(file_path):
+    """Extract text from PDF using PyPDF2 (lightweight)"""
     try:
-        logger.debug(f"Extracting text from PDF: {pdf_path}")
-        
-        # Check if file exists
-        if not os.path.isfile(pdf_path):
-            raise FileNotFoundError(f"PDF file not found at path: {pdf_path}")
-        
-        # Extract text using PDFMiner
-        text = extract_text(pdf_path)
-        
-        if not text.strip():
-            logger.warning(f"No text extracted from PDF: {pdf_path}")
-            return "No text could be extracted from this PDF. The file might be scanned or contain only images."
-        
-        logger.debug(f"Successfully extracted {len(text)} characters from PDF")
-        return text
-    
+        text = ""
+        with open(file_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfReader(file)
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
+        return text.strip()
     except Exception as e:
-        logger.error(f"Error extracting text from PDF: {str(e)}")
-        raise Exception(f"Failed to extract text from PDF: {str(e)}")
+        print(f"Error extracting PDF text: {e}")
+        return ""

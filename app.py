@@ -3,7 +3,6 @@ import logging
 from tempfile import mkdtemp
 from dotenv import load_dotenv
 from collections import defaultdict
-from utils.pdf_extraction import extract_text_from_pdf
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -13,7 +12,6 @@ import uuid
 import stripe
 import json
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
@@ -21,6 +19,24 @@ import io
 import base64
 from models import db, User, CVUpload, AnalysisResult
 from forms import LoginForm, RegistrationForm, UserProfileForm, ChangePasswordForm
+
+# Lightweight PDF processing
+import PyPDF2
+from docx import Document
+from PIL import Image
+
+# Removed: import fitz  # PyMuPDF
+# Removed: import pytesseract
+# Removed: import cv2
+# Removed: import numpy as np
+# Removed: from reportlab.pdfgen import canvas
+# Removed: from reportlab.lib.pagesizes import letter
+# Removed: import pdfplumber
+# Removed: from pdf2image import convert_from_path
+
+
+# Utilities - assuming these are in their respective files and correctly imported
+from utils.pdf_extraction import extract_text_from_pdf # Assuming this now uses PyPDF2 or similar
 from utils.openrouter_api import (
     optimize_cv, generate_recruiter_feedback, generate_cover_letter,
     analyze_job_url, ats_optimization_check, generate_interview_questions,
@@ -863,6 +879,7 @@ def upload_cv():
 
             try:
                 # Extract text from PDF
+                # Assuming extract_text_from_pdf is updated to use new libraries
                 cv_text = extract_text_from_pdf(file_path)
                 # Remove the file after extraction
                 os.remove(file_path)
