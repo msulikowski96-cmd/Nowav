@@ -536,27 +536,64 @@ input[type="file"]:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .container-fluid {
-        padding: 15px;
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .card {
+        margin-bottom: 20px;
     }
 
     .card-body {
-        padding: 1.5rem;
+        padding: 20px !important;
     }
 
     .btn {
         width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .language-selector {
-        flex-direction: column;
-        gap: 0.5rem;
+        margin-bottom: 15px;
+        min-height: 48px; /* Better touch target */
+        font-size: 16px; /* Prevent zoom on iOS */
     }
 
     .language-option {
         width: 100%;
         justify-content: center;
+        min-height: 44px;
+        padding: 12px;
+    }
+
+    /* Larger text on mobile for better readability */
+    .card-text {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    /* Better spacing for mobile */
+    .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    .col-md-4, .col-md-6, .col-md-8 {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Mobile-specific improvements */
+    .upload-area {
+        min-height: 120px;
+        padding: 30px 15px;
+    }
+
+    .form-control {
+        font-size: 16px; /* Prevent zoom on iOS */
+        min-height: 48px;
+    }
+
+    .textarea-custom {
+        min-height: 120px;
     }
 }
 

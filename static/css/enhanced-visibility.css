@@ -1,4 +1,3 @@
-
 /* ENHANCED VISIBILITY FIXES FOR CV OPTIMIZER PRO */
 
 /* Force high contrast for all text elements */
@@ -240,9 +239,63 @@ input[type="file"] {
     .card-body {
         padding: 1.5rem !important;
     }
-    
+
     .form-control {
         font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+
+    /* Enhanced visibility improvements */
+    .card {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .card:hover {
+        transform: none;
+    }
+
+    /* Better focus indicators for mobile */
+    .btn:focus,
+    .form-control:focus {
+        outline: 3px solid #667eea;
+        outline-offset: 2px;
+    }
+
+    /* Larger tap targets for mobile */
+    .fas, .far {
+        font-size: 1.2em;
+        padding: 2px;
+    }
+
+    /* Better mobile typography */
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    h5 {
+        font-size: 1.25rem;
+    }
+
+    /* Mobile navigation improvements */
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    /* Better mobile spacing */
+    .mb-4 {
+        margin-bottom: 2rem !important;
+    }
+
+    .mt-4 {
+        margin-top: 2rem !important;
     }
 }
 
@@ -251,7 +304,7 @@ input[type="file"] {
     .form-control {
         border-width: 3px !important;
     }
-    
+
     .btn {
         border-width: 2px !important;
     }
