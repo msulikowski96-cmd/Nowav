@@ -30,11 +30,11 @@
     --text-dark: #ffffff;
 
     /* Background Colors - DARK MODE */
-    --bg-primary: rgba(0, 0, 0, 0.95);
-    --bg-secondary: rgba(10, 10, 10, 0.95);
-    --bg-card: rgba(20, 20, 20, 0.95);
-    --bg-input: rgba(30, 30, 30, 0.95);
-    --bg-gradient: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    --bg-primary: rgb(255, 255, 255, 0.95);
+    --bg-secondary: rgb(255, 255, 255, 0.95);
+    --bg-card: rgb(255, 255, 255, 0.95);
+    --bg-input: rgb(255, 255, 255, 0.95);
+    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
 
     /* Border Colors - DARK MODE */
     --border-primary: rgba(102, 126, 234, 0.6);
