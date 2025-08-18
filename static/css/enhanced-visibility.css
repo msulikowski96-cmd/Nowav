@@ -234,68 +234,343 @@ input[type="file"] {
     color: rgba(255, 255, 255, 0.6) !important;
 }
 
-/* Responsive fixes */
+/* COMPREHENSIVE MOBILE FIX */
 @media (max-width: 768px) {
-    .card-body {
-        padding: 1.5rem !important;
+    /* Container and layout fixes */
+    .container, .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin: 0 !important;
+        max-width: 100% !important;
     }
 
-    .form-control {
-        font-size: 16px !important; /* Prevents zoom on iOS */
+    /* Row and column fixes */
+    .row {
+        margin-left: -5px !important;
+        margin-right: -5px !important;
     }
 
-    /* Enhanced visibility improvements */
+    .col-md-4, .col-md-6, .col-md-8, .col-md-12 {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Card fixes */
     .card {
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
+        margin-bottom: 15px !important;
+        border-radius: 12px !important;
+        transform: none !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
     }
 
     .card:hover {
-        transform: none;
+        transform: none !important;
     }
 
-    /* Better focus indicators for mobile */
-    .btn:focus,
-    .form-control:focus {
-        outline: 3px solid #667eea;
-        outline-offset: 2px;
+    .card-body {
+        padding: 15px !important;
     }
 
-    /* Larger tap targets for mobile */
-    .fas, .far {
-        font-size: 1.2em;
-        padding: 2px;
+    .card-header {
+        padding: 15px !important;
+        border-radius: 12px 12px 0 0 !important;
     }
 
-    /* Better mobile typography */
+    /* Button fixes */
+    .btn {
+        width: 100% !important;
+        margin-bottom: 10px !important;
+        padding: 15px 20px !important;
+        font-size: 16px !important;
+        min-height: 50px !important;
+        border-radius: 12px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .btn:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* Form fixes */
+    .form-control {
+        font-size: 16px !important;
+        padding: 15px !important;
+        min-height: 50px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .form-label {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+        color: #111827 !important;
+    }
+
+    /* Language selector mobile fix */
+    .language-selector {
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .language-option {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 15px !important;
+        font-size: 16px !important;
+        min-height: 50px !important;
+        border-radius: 8px !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Typography fixes */
     h1 {
-        font-size: 2rem;
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 15px !important;
+        text-align: center !important;
     }
 
     h2 {
-        font-size: 1.75rem;
+        font-size: 1.5rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 15px !important;
     }
 
     h3 {
-        font-size: 1.5rem;
+        font-size: 1.3rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 10px !important;
     }
 
     h5 {
-        font-size: 1.25rem;
+        font-size: 1.1rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 10px !important;
     }
 
-    /* Mobile navigation improvements */
+    p {
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Navigation mobile fixes */
+    .navbar {
+        padding: 10px !important;
+    }
+
     .navbar-brand {
-        font-size: 1.1rem;
+        font-size: 1.1rem !important;
+        white-space: nowrap !important;
     }
 
-    /* Better mobile spacing */
+    .navbar-nav {
+        width: 100% !important;
+    }
+
+    .nav-link {
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+        border-radius: 8px !important;
+        margin: 5px 0 !important;
+    }
+
+    /* List group mobile fixes */
+    .list-group-item {
+        padding: 15px !important;
+        margin-bottom: 10px !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+    }
+
+    .list-group-item strong {
+        display: block !important;
+        margin-bottom: 5px !important;
+        font-size: 16px !important;
+    }
+
+    .list-group-item small {
+        font-size: 13px !important;
+        display: block !important;
+        margin-top: 5px !important;
+    }
+
+    /* Preview areas mobile fixes */
+    #cv-preview, #result-container {
+        padding: 15px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        border-radius: 8px !important;
+        min-height: 300px !important;
+        overflow-x: auto !important;
+    }
+
+    /* CV formatted content mobile fixes */
+    .cv-formatted {
+        padding: 15px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    .cv-formatted h5 {
+        font-size: 1.1rem !important;
+        margin: 20px 0 10px 0 !important;
+        padding-bottom: 8px !important;
+    }
+
+    .cv-formatted p {
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .cv-formatted li {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+        padding-left: 15px !important;
+    }
+
+    /* Alert mobile fixes */
+    .alert {
+        padding: 12px 15px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Stats and metrics mobile fixes */
+    .stat-card, .metric-card {
+        padding: 15px !important;
+        text-align: center !important;
+        margin-bottom: 15px !important;
+    }
+
+    .stat-number {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+    }
+
+    .stat-label {
+        font-size: 14px !important;
+    }
+
+    /* Job analysis mobile fixes */
+    .job-analysis-container {
+        padding: 15px !important;
+        margin: 15px 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .job-analysis-content {
+        padding: 15px !important;
+        border-radius: 8px !important;
+    }
+
+    /* File upload mobile fixes */
+    input[type="file"] {
+        padding: 15px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+        min-height: 60px !important;
+    }
+
+    /* Spacing improvements */
     .mb-4 {
-        margin-bottom: 2rem !important;
+        margin-bottom: 20px !important;
     }
 
     .mt-4 {
-        margin-top: 2rem !important;
+        margin-top: 20px !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 15px !important;
+    }
+
+    .mt-3 {
+        margin-top: 15px !important;
+    }
+
+    /* Text alignment mobile */
+    .text-center {
+        text-align: center !important;
+    }
+
+    /* Better tap targets */
+    a, button, input, select, textarea {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+
+    /* Focus indicators for mobile */
+    .btn:focus,
+    .form-control:focus,
+    .language-option:focus {
+        outline: 3px solid #4f46e5 !important;
+        outline-offset: 2px !important;
+    }
+
+    /* Remove transforms and animations on mobile for better performance */
+    * {
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .btn:hover,
+    .card:hover,
+    .list-group-item:hover {
+        transform: none !important;
+    }
+
+    /* Better readability */
+    body {
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        -webkit-text-size-adjust: 100% !important;
+    }
+
+    /* Overflow fixes */
+    body, html {
+        overflow-x: hidden !important;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+    .container, .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    h1 {
+        font-size: 1.8rem !important;
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+    }
+
+    h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .btn {
+        padding: 12px 15px !important;
+        font-size: 15px !important;
+    }
+
+    .card-body {
+        padding: 12px !important;
+    }
+
+    .card-header {
+        padding: 12px !important;
     }
 }
 
