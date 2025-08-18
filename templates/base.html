@@ -71,7 +71,38 @@
             <a class="navbar-brand fw-bold" href="{{ url_for('index') }}" style="color: var(--text-on-primary); text-decoration: none;">
                 <i class="fas fa-rocket me-2" style="color: #4facfe;"></i>CV Optimizer Pro
             </a>
-            
+
+            <div class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                    <span class="navbar-text me-3" style="color: rgba(255,255,255,0.9);">
+                        <i class="fas fa-user me-1" style="color: #4facfe;"></i>
+                        Witaj, <strong style="color: var(--text-on-primary);">{{ current_user.username }}</strong>!
+                    </span>
+                    <a class="btn btn-outline-light btn-sm me-2" href="{{ url_for('profile') }}" style="border-color: rgba(255,255,255,0.8); color: var(--text-on-primary);">
+                        <i class="fas fa-user-cog me-1"></i>Profil
+                    </a>
+                    <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}" style="border-color: rgba(255,255,255,0.8); color: var(--text-on-primary);">
+                        <i class="fas fa-sign-out-alt me-1"></i>Wyloguj
+                    </a>
+                {% else %}
+                    <a class="btn btn-outline-light btn-sm me-2" href="{{ url_for('login') }}" style="border-color: rgba(255,255,255,0.8); color: var(--text-on-primary);">
+                        <i class="fas fa-sign-in-alt me-1"></i>Zaloguj
+                    </a>
+                    <a class="btn btn-light btn-sm" href="{{ url_for('register') }}" style="background: rgba(255,255,255,0.9); color: var(--text-primary); border: none;">
+                        <i class="fas fa-user-plus me-1"></i>Rejestracja
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: var(--gradient-hero); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}" style="color: var(--text-on-primary); text-decoration: none;">
+                <i class="fas fa-rocket me-2" style="color: #4facfe;"></i>CV Optimizer Pro
+            </a>
+
             <div class="navbar-nav ms-auto">
                 {% if current_user.is_authenticated %}
                     <span class="navbar-text me-3" style="color: rgba(255,255,255,0.9);">
@@ -220,7 +251,9 @@
 
     <!-- Main Content with proper spacing for fixed nav -->
     <main class="container-fluid main-content">
-        {% block content %}{% endblock %}
+        <div class="main-container">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <!-- Modern Footer -->

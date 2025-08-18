@@ -872,6 +872,68 @@ input[type="file"]:hover {
         background: rgba(79, 70, 229, 0.2) !important;
         color: var(--text-primary, #111827) !important;
     }
+
+    /* Profile-style mobile adjustments */
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .stats-grid-profile {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .action-buttons-profile {
+        flex-direction: column;
+    }
+
+    .action-buttons-profile .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .content-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .feature-card-profile {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .feature-icon-profile {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .stat-number-profile {
+        font-size: 2rem;
+    }
+
+    .nav-profile {
+        padding: 10px;
+    }
+
+    .nav-profile .nav-link {
+        padding: 10px 15px;
+        margin-bottom: 5px;
+        display: block;
+    }
 }
 
 /* Extra small devices */
