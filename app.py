@@ -3,37 +3,7 @@ import logging
 from tempfile import mkdtemp
 from dotenv import load_dotenv
 from collections import defaultdict
-
-# Load environment variables from .env file - with override
-load_dotenv(override=True)
-
-# Verify critical environment variables are loaded
-def verify_env_vars():
-    """Verify that all critical environment variables are loaded"""
-    critical_vars = [
-        'OPENROUTER_API_KEY',
-        'STRIPE_SECRET_KEY', 
-        'SECRET_KEY',
-        'DATABASE_URL'
-    ]
-    
-    missing_vars = []
-    for var in critical_vars:
-        value = os.environ.get(var)
-        if not value or value.startswith('TWÓJ_') or len(value.strip()) < 10:
-            missing_vars.append(var)
-    
-    if missing_vars:
-        print(f"❌ BŁĄD: Brakujące lub niepoprawne zmienne środowiskowe: {missing_vars}")
-        print("🔧 Sprawdź plik .env i ustaw prawdziwe wartości!")
-        return False
-    
-    print("✅ Wszystkie krytyczne zmienne środowiskowe są ustawione")
-    return True
-
-# Verify environment on startup
-env_check_passed = verify_env_vars()
-
+from utils.pdf_extraction import extract_text_from_pdf
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -49,10 +19,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 import io
 import base64
-from datetime import datetime
 from models import db, User, CVUpload, AnalysisResult
 from forms import LoginForm, RegistrationForm, UserProfileForm, ChangePasswordForm
-from utils.pdf_extraction import extract_text_from_pdf
 from utils.openrouter_api import (
     optimize_cv, generate_recruiter_feedback, generate_cover_letter,
     analyze_job_url, ats_optimization_check, generate_interview_questions,
@@ -64,6 +32,36 @@ from utils.security_middleware import security_middleware
 from utils.notifications import notification_system
 from utils.analytics import analytics
 from utils.cv_validator import cv_validator
+
+# Load environment variables from .env file - with override
+load_dotenv(override=True)
+
+# Verify critical environment variables are loaded
+def verify_env_vars():
+    """Verify that all critical environment variables are loaded"""
+    critical_vars = [
+        'OPENROUTER_API_KEY',
+        'STRIPE_SECRET_KEY', 
+        'SECRET_KEY',
+        'DATABASE_URL'
+    ]
+
+    missing_vars = []
+    for var in critical_vars:
+        value = os.environ.get(var)
+        if not value or value.startswith('TWÓJ_') or len(value.strip()) < 10:
+            missing_vars.append(var)
+
+    if missing_vars:
+        print(f"❌ BŁĄD: Brakujące lub niepoprawne zmienne środowiskowe: {missing_vars}")
+        print("🔧 Sprawdź plik .env i ustaw prawdziwe wartości!")
+        return False
+
+    print("✅ Wszystkie krytyczne zmienne środowiskowe są ustawione")
+    return True
+
+# Verify environment on startup
+env_check_passed = verify_env_vars()
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -282,7 +280,7 @@ def parse_ai_json_response(ai_result):
             clean_result = clean_result[json_start:json_end]
 
         parsed_result = json.loads(clean_result)
-        
+
         # Handle different response types
         if 'optimized_cv' in parsed_result:
             return parsed_result.get('optimized_cv')
@@ -1711,8 +1709,7 @@ def generate_improve_cv():
         # Store improved CV for comparison
         if isinstance(result, dict) and 'improved_cv' in result:
             session['last_optimized_cv'] = result['improved_cv'][:1500] + "...[skrócono]" if len(result['improved_cv']) > 1500 else result['improved_cv']
-        elif isinstance(result, str):
-            session['last_optimized_cv'] = result[:1500] + "...[skrócono]" if len(result) > 1500 else result
+            session['last_feedback_applied'] = True
 
         # Zapisz wynik w bazie danych
         cv_upload_id = session.get('cv_upload_id')
@@ -1916,7 +1913,7 @@ def check_configuration():
     print("\n" + "="*60)
     print("🔧 SPRAWDZANIE KONFIGURACJI CV OPTIMIZER PRO")
     print("="*60)
-    
+
     # Sprawdź zmienne środowiskowe
     config_status = {
         'OPENROUTER_API_KEY': bool(os.environ.get('OPENROUTER_API_KEY', '').strip() and 
@@ -1925,16 +1922,16 @@ def check_configuration():
         'SECRET_KEY': bool(os.environ.get('SECRET_KEY', '').strip()),
         'DATABASE_URL': bool(os.environ.get('DATABASE_URL', '').strip()),
     }
-    
+
     for key, status in config_status.items():
         status_icon = "✅" if status else "❌"
         print(f"{status_icon} {key}: {'OK' if status else 'BRAK/NIEPOPRAWNY'}")
-    
+
     if not all(config_status.values()):
         print("\n❌ KONFIGURACJA NIEKOMPLETNA!")
         print("🔧 Sprawdź plik .env i ustaw wszystkie wymagane zmienne")
         return False
-    
+
     print("\n✅ KONFIGURACJA KOMPLETNA!")
     print("="*60 + "\n")
     return True
@@ -1973,7 +1970,7 @@ if __name__ == '__main__':
     if not check_configuration():
         print("⚠️ Aplikacja może nie działać poprawnie bez kompletnej konfiguracji")
         print("🔧 Zaktualizuj plik .env z prawidłowymi wartościami")
-    
+
     # Initialize for development
     if os.environ.get('FLASK_ENV') != 'production':
         initialize_app()
@@ -1983,7 +1980,7 @@ if __name__ == '__main__':
 
     # Log startup info
     print(f"🚀 Starting CV Optimizer Pro on 0.0.0.0:{port}")
-    
+
     # Ensure proper binding
     debug_mode = os.environ.get("DEBUG", "False").lower() == "true"
     app.run(host='0.0.0.0', port=port, debug=debug_mode, threaded=True)
