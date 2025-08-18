@@ -15,11 +15,17 @@ SQLAlchemy==2.0.21
 requests==2.31.0
 urllib3==2.0.4
 
-# PDF Processing (lightweight alternatives)
+# Web scraping and parsing
+beautifulsoup4==4.12.2
+trafilatura==1.6.4
+lxml==4.9.3
+
+# PDF Processing
 PyPDF2==3.0.1
 python-docx==1.1.0
+reportlab==4.0.4
 
-# Image Processing (lightweight)
+# Image Processing
 Pillow==10.0.1
 
 # Security and Encryption
@@ -28,6 +34,9 @@ itsdangerous==2.1.2
 
 # Payment Processing
 stripe==6.6.0
+
+# Email validation
+email-validator==2.1.0
 
 # WSGI Server
 gunicorn==21.2.0
@@ -39,5 +48,4 @@ Jinja2==3.1.2
 MarkupSafe==2.1.3
 click==8.1.7
 blinker==1.6.2
-reportlab
-email_validator
+uuid==1.30
