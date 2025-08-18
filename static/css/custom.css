@@ -23,7 +23,7 @@
     --bg-secondary: rgba(10, 10, 10, 0.95);
     --bg-card: rgba(20, 20, 20, 0.95);
     --bg-input: rgba(30, 30, 30, 0.95);
-    --bg-gradient: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    --bg-gradient: linear-gradient(135deg, #0000ff 25%, #0000ff 100%);
 
     /* Border Colors - DARK MODE */
     --border-primary: rgba(102, 126, 234, 0.6);
