@@ -19,15 +19,15 @@ def validate_api_key():
     if not OPENROUTER_API_KEY:
         logger.error("❌ OPENROUTER_API_KEY nie jest ustawiony w pliku .env")
         return False
-    
+
     if OPENROUTER_API_KEY.startswith('TWÓJ_') or len(OPENROUTER_API_KEY) < 20:
         logger.error("❌ OPENROUTER_API_KEY w .env zawiera przykładową wartość - ustaw prawdziwy klucz!")
         return False
-    
+
     if not OPENROUTER_API_KEY.startswith('sk-or-v1-'):
         logger.error("❌ OPENROUTER_API_KEY nie ma poprawnego formatu (powinien zaczynać się od 'sk-or-v1-')")
         return False
-    
+
     logger.info(f"✅ OpenRouter API key załadowany poprawnie (długość: {len(OPENROUTER_API_KEY)})")
     return True
 
@@ -363,7 +363,70 @@ def generate_interview_tips(cv_text, job_description="", language='pl'):
         task_type='interview_prep'
     )
 
-def apply_recruiter_feedback_to_cv(cv_text, feedback, job_description, language='pl', is_premium=False, payment_verified=False):
+def generate_improved_cv(cv_text, improvement_focus='general', target_industry='', language='pl', is_premium=False, payment_verified=False):
+    """
+    Generate an improved version of CV based on focus area
+    """
+    focus_prompts = {
+        'general': "Przeprowadź ogólną poprawę CV zwiększając jego atrakcyjność dla rekruterów",
+        'structure': "Popraw strukturę i organizację CV dla lepszej czytelności",
+        'content': "Wzbogać treść CV dodając więcej wartości do opisów",
+        'keywords': "Zoptymalizuj CV pod kątem słów kluczowych branżowych",
+        'achievements': "Przekształć obowiązki w konkretne osiągnięcia z mierzalnymi rezultatami"
+    }
+
+    industry_context = f"Branża docelowa: {target_industry}" if target_industry else ""
+
+    prompt = f"""
+    ZADANIE EKSPERCKIE: {focus_prompts.get(improvement_focus, focus_prompts['general'])}
+
+    🎯 CELE POPRAWY:
+    1. Zwiększ atrakcyjność CV dla rekruterów
+    2. Popraw prezentację doświadczenia i umiejętności
+    3. Zachowaj wszystkie oryginalne fakty
+    4. Użyj profesjonalnej terminologii branżowej
+    5. Zoptymalizuj pod kątem ATS
+
+    {industry_context}
+
+    ORYGINALNE CV:
+    {cv_text}
+
+    POZIOM USŁUGI: {"Premium Advanced" if is_premium else "Standard Paid"}
+
+    Przeprowadź kompleksową poprawę CV zachowując wszystkie oryginalne fakty.
+
+    Odpowiedź w formacie JSON:
+    {{
+        "improved_cv": "Poprawiona wersja CV z lepszą prezentacją",
+        "improvements_made": [
+            "Lista konkretnych poprawek wprowadzonych",
+            "Każda poprawka z uzasadnieniem"
+        ],
+        "preserved_elements": [
+            "Lista zachowanych oryginalnych elementów",
+            "Potwierdzenie że nie dodano fałszywych informacji"
+        ],
+        "focus_area_improvements": "Szczegółowe poprawki w wybranym obszarze: {improvement_focus}",
+        "recommendations": [
+            "Dodatkowe rekomendacje dla kandydata",
+            "Sugestie dalszych poprawek"
+        ]
+    }}
+    """
+
+    max_tokens = 4000 if is_premium else 2500
+
+    return send_api_request(
+        prompt,
+        max_tokens=max_tokens,
+        language=language,
+        user_tier='premium' if is_premium else 'paid',
+        task_type='cv_improvement'
+    )
+
+
+def apply_recruiter_feedback_to_cv(cv_text, recruiter_feedback, job_description="", language='pl', is_premium=False, payment_verified=False):
     """Apply recruiter feedback to improve CV"""
     prompt = f"""
     Zastosuj poniższe uwagi rekrutera do CV i popraw je zgodnie z sugestiami.
@@ -684,7 +747,7 @@ def optimize_cv(cv_text, job_description, language='pl', is_premium=False, payme
     - Zwięzłe podsumowanie zawodowe
     - Czytelne formatowanie
     """
-    
+
     return send_api_request(
         prompt,
         max_tokens=max_tokens,
@@ -1127,7 +1190,15 @@ def get_enhanced_system_prompt(task_type, language='pl'):
 - Znasz techniki odpowiadania (STAR, CAR)
 - Pomagasz w przygotowaniu historii sukcesu
 - Analizujesz potencjalne słabości i jak je przedstawić
-- Przygotowujesz do różnych typów rozmów (HR, techniczne, z przełożonym)"""
+- Przygotowujesz do różnych typów rozmów (HR, techniczne, z przełożonym)""",
+
+        'cv_improvement': """
+
+🌟 SPECJALIZACJA: POPRAWA CV
+- Skupiasz się na specyficznych aspektach CV (struktura, treść, słowa kluczowe, osiągnięcia)
+- Dostosowujesz podejście do wybranego obszaru poprawy
+- Zapewniasz lepszą prezentację kandydatury
+- Generujesz praktyczne rekomendacje"""
     }
 
     return base_prompt + task_specific_prompts.get(task_type, "")

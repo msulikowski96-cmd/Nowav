@@ -303,6 +303,26 @@
             </div>
             <div class="collapse show" id="optimization-collapse">
                 <div class="card-body" style="padding: 2rem;">
+                    <!-- Quick Improve CV Section -->
+                        <div class="quick-improve-section">
+                            <h3 class="gradient-text">⚡ Szybka poprawa CV</h3>
+                            <div class="improve-controls">
+                                <select id="improvement-focus" class="improve-select">
+                                    <option value="general">Ogólna poprawa</option>
+                                    <option value="structure">Poprawa struktury</option>
+                                    <option value="content">Wzbogacenie treści</option>
+                                    <option value="keywords">Optymalizacja słów kluczowych</option>
+                                    <option value="achievements">Prezentacja osiągnięć</option>
+                                </select>
+                                <input type="text" id="target-industry" placeholder="Branża docelowa (opcjonalnie)" class="improve-input">
+                                <button id="improve-cv-btn" class="btn-improve-cv">
+                                    <i class="fas fa-magic"></i> Popraw CV
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="optimization-options">
+                            <h3 class="gradient-text">🎯 Wybierz opcję optymalizacji</h3>
                     <div class="list-group">
                         <label class="list-group-item d-flex gap-2">
                             <input class="form-check-input flex-shrink-0" type="radio" name="optimization-option" id="optimize" value="optimize" checked>

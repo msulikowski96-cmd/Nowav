@@ -1649,6 +1649,93 @@ def process_cv():
         }), 500
 
 
+@app.route('/generate-improve-cv', methods=['POST'])
+@login_required
+@rate_limit('cv_process')
+def generate_improve_cv():
+    """
+    Generate an improved version of existing CV - PAID FEATURE (9.99 PLN or Premium)
+    """
+    try:
+        data = request.get_json()
+        cv_text = data.get('cv_text') or session.get('cv_text')
+        improvement_focus = data.get('improvement_focus', 'general')  # general, structure, content, keywords
+        target_industry = data.get('target_industry', '')
+        language = data.get('language', 'pl')
+
+        if not cv_text:
+            return jsonify({
+                'success': False,
+                'message': 'Brak tekstu CV. Prześlij najpierw CV.'
+            }), 400
+
+        # Sprawdź dostęp do funkcji
+        is_developer = current_user.username == 'developer'
+        is_premium_active = current_user.is_premium_active()
+        payment_verified = session.get('payment_verified', False)
+
+        # Ta funkcja wymaga płatności (9.99 PLN) lub Premium
+        if not is_developer and not payment_verified and not is_premium_active:
+            return jsonify({
+                'success': False,
+                'message': 'Poprawa CV wymaga płatności 9,99 PLN lub subskrypcji Premium.',
+                'payment_required': True
+            }), 403
+
+        # Generuj poprawione CV
+        from utils.openrouter_api import generate_improved_cv
+
+        ai_result = generate_improved_cv(
+            cv_text,
+            improvement_focus,
+            target_industry,
+            language,
+            is_premium=is_premium_active,
+            payment_verified=payment_verified or is_developer)
+
+        # Parse JSON response
+        result = parse_ai_json_response(ai_result)
+
+        # Store improved CV for comparison
+        if isinstance(result, dict) and 'improved_cv' in result:
+            session['last_optimized_cv'] = result['improved_cv'][:1500] + "...[skrócono]" if len(result['improved_cv']) > 1500 else result['improved_cv']
+        elif isinstance(result, str):
+            session['last_optimized_cv'] = result[:1500] + "...[skrócono]" if len(result) > 1500 else result
+
+        # Zapisz wynik w bazie danych
+        cv_upload_id = session.get('cv_upload_id')
+        if cv_upload_id:
+            try:
+                analysis_result = AnalysisResult(
+                    cv_upload_id=cv_upload_id,
+                    analysis_type='generate_improve_cv',
+                    result_data=json.dumps(
+                        {
+                            'result': result,
+                            'improvement_focus': improvement_focus,
+                            'target_industry': target_industry,
+                            'timestamp': datetime.utcnow().isoformat()
+                        },
+                        ensure_ascii=False))
+                db.session.add(analysis_result)
+                db.session.commit()
+            except Exception as e:
+                logger.error(f"Error saving improved CV result: {str(e)}")
+
+        return jsonify({
+            'success': True,
+            'result': result,
+            'message': 'CV zostało pomyślnie poprawione!'
+        })
+
+    except Exception as e:
+        logger.error(f"Error generating improved CV: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Błąd podczas poprawy CV: {str(e)}'
+        }), 500
+
+
 @app.route('/apply-recruiter-feedback', methods=['POST'])
 @login_required
 @rate_limit('cv_process')

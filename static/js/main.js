@@ -118,6 +118,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Improve CV button click
+    const improveCVButton = document.getElementById('improve-cv-btn');
+    if (improveCVButton) {
+        improveCVButton.addEventListener('click', async function() {
+            const cvText = document.getElementById('cv-text')?.value;
+            if (!cvText) {
+                showError('Najpierw prześlij CV');
+                return;
+            }
+
+            const improvementFocus = document.getElementById('improvement-focus')?.value || 'general';
+            const targetIndustry = document.getElementById('target-industry')?.value || '';
+
+            try {
+                setLoading(true);
+                showProcessing('Poprawiam CV...');
+
+                const response = await fetch('/generate-improve-cv', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cv_text: cvText,
+                        improvement_focus: improvementFocus,
+                        target_industry: targetIndustry,
+                        language: 'pl'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data.result, 'improve_cv');
+                    showSuccess(data.message);
+                } else {
+                    if (data.payment_required) {
+                        showPaymentRequired(data.message);
+                    } else {
+                        showError(data.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Error improving CV:', error);
+                showError('Wystąpił błąd podczas poprawy CV');
+            } finally {
+                setLoading(false);
+                hideProcessing();
+            }
+        });
+    }
+
     // Process CV button click
     if (processButton) {
         processButton.addEventListener('click', async function() {
