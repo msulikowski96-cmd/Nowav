@@ -303,17 +303,66 @@ input[type="file"]:hover {
         0 0 20px rgba(99, 102, 241, 0.1) !important;
 }
 
-/* Mobile Enhancements */
+/* Enhanced Mobile Responsiveness */
 @media (max-width: 768px) {
     .card:hover {
-        transform: translateY(-6px) scale(1.01) !important;
+        transform: translateY(-4px) !important;
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.1),
+            0 0 30px rgba(99, 102, 241, 0.15) !important;
     }
 
     .btn:hover {
-        transform: translateY(-2px) scale(1.02) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 
+            0 8px 20px rgba(99, 102, 241, 0.3) !important;
     }
 
     .list-group-item:hover {
-        transform: translateX(4px) !important;
+        transform: translateX(2px) !important;
+    }
+
+    /* Better touch targets */
+    .btn {
+        min-height: 48px !important;
+        padding: 12px 24px !important;
+    }
+
+    .form-control {
+        min-height: 48px !important;
+        font-size: 16px !important;
+    }
+
+    /* Improved spacing */
+    .container-fluid {
+        padding: 1rem !important;
+    }
+    
+    .card {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #000 !important;
+    }
+    
+    .btn {
+        border: 2px solid #000 !important;
+    }
+    
+    .form-control {
+        border: 2px solid #000 !important;
     }
 }
