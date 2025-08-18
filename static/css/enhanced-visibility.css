@@ -1,0 +1,258 @@
+
+/* ENHANCED VISIBILITY FIXES FOR CV OPTIMIZER PRO */
+
+/* Force high contrast for all text elements */
+.card-body, .card-body * {
+    color: var(--text-primary, #111827) !important;
+}
+
+.card-header, .card-header * {
+    color: var(--text-on-primary, #ffffff) !important;
+}
+
+/* Fix form control visibility */
+.form-control {
+    background: #ffffff !important;
+    border: 2px solid #d1d5db !important;
+    color: #111827 !important;
+    font-weight: 500 !important;
+}
+
+.form-control:focus {
+    background: #ffffff !important;
+    border-color: #4f46e5 !important;
+    color: #111827 !important;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+}
+
+.form-control::placeholder {
+    color: #6b7280 !important;
+    opacity: 0.8 !important;
+}
+
+/* Fix label visibility */
+.form-label {
+    color: #111827 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+.form-text {
+    color: #6b7280 !important;
+    font-size: 13px !important;
+}
+
+/* Fix list group items */
+.list-group-item {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.list-group-item strong {
+    color: #111827 !important;
+}
+
+.list-group-item small {
+    color: #6b7280 !important;
+}
+
+.list-group-item:has(input:checked) {
+    background: rgba(79, 70, 229, 0.1) !important;
+    border-color: #4f46e5 !important;
+    color: #111827 !important;
+}
+
+/* Fix language selector */
+.language-option {
+    background: #ffffff !important;
+    border: 2px solid #d1d5db !important;
+    color: #374151 !important;
+}
+
+.language-option:hover {
+    background: #f9fafb !important;
+    border-color: #4f46e5 !important;
+    color: #4f46e5 !important;
+}
+
+input[type="radio"]:checked + .language-option {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5 !important;
+}
+
+/* Fix preview areas */
+#cv-preview, #result-container {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.cv-formatted {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.cv-formatted h5 {
+    color: #111827 !important;
+}
+
+.cv-formatted p {
+    color: #111827 !important;
+}
+
+.cv-formatted li {
+    color: #111827 !important;
+}
+
+/* Fix file upload */
+input[type="file"] {
+    background: #ffffff !important;
+    border: 2px dashed #4f46e5 !important;
+    color: #111827 !important;
+}
+
+/* Fix buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background: linear-gradient(135deg, #3730a3 0%, #6b21a8 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Fix alerts */
+.alert {
+    border-left: 4px solid #4f46e5 !important;
+}
+
+.alert-success {
+    background: rgba(5, 150, 105, 0.1) !important;
+    color: #065f46 !important;
+    border-left-color: #059669 !important;
+}
+
+.alert-info {
+    background: rgba(79, 70, 229, 0.1) !important;
+    color: #3730a3 !important;
+    border-left-color: #4f46e5 !important;
+}
+
+.alert-warning {
+    background: rgba(217, 119, 6, 0.1) !important;
+    color: #92400e !important;
+    border-left-color: #d97706 !important;
+}
+
+.alert-danger {
+    background: rgba(220, 38, 38, 0.1) !important;
+    color: #991b1b !important;
+    border-left-color: #dc2626 !important;
+}
+
+/* Fix hero section text */
+.hero-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+}
+
+.hero-subtitle {
+    color: rgba(255,255,255,0.95) !important;
+}
+
+.hero-description {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+/* Fix pricing card */
+.pricing-card-modern {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.pricing-title-modern {
+    color: #111827 !important;
+}
+
+.pricing-amount-modern .price {
+    color: #4f46e5 !important;
+}
+
+.feature-item-modern {
+    color: #111827 !important;
+}
+
+/* Fix processing indicator */
+#processing-indicator {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+/* Fix collapse info */
+.collapse-info {
+    background: rgba(79, 70, 229, 0.05) !important;
+    color: #374151 !important;
+}
+
+.collapse-info p {
+    color: #374151 !important;
+}
+
+/* Fix navbar links */
+.modern-nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.modern-nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Fix footer */
+.footer-description {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.copyright {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .form-control {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .form-control {
+        border-width: 3px !important;
+    }
+    
+    .btn {
+        border-width: 2px !important;
+    }
+}
