@@ -57,38 +57,10 @@
 
             <div class="col-lg-6">
                 <div class="hero-visual">
-                    <div class="pricing-card-modern">
-                        <div class="pricing-header">
-                            <div class="pricing-icon-modern">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <h4 class="pricing-title-modern">Profesjonalna analiza AI</h4>
-                            <div class="pricing-amount-modern">
-                                <span class="currency">PLN</span>
-                                <span class="price">9,99</span>
-                            </div>
-                        </div>
-                        <div class="pricing-features-modern">
-                            <div class="feature-item-modern">
-                                <i class="fas fa-check text-success"></i>
-                                <span>Analiza CV przez AI</span>
-                            </div>
-                            <div class="feature-item-modern">
-                                <i class="fas fa-check text-success"></i>
-                                <span>Optymalizacja pod stanowisko</span>
-                            </div>
-                            <div class="feature-item-modern">
-                                <i class="fas fa-check text-success"></i>
-                                <span>Ocena i rekomendacje</span>
-                            </div>
-                            <div class="feature-item-modern">
-                                <i class="fas fa-check text-success"></i>
-                                <span>List motywacyjny</span>
-                            </div>
-                        </div>
-                        <a href="{{ url_for('checkout') }}" class="btn btn-gradient w-100 py-3 fw-bold">
-                            <i class="fas fa-credit-card me-2"></i>Zapłać i optymalizuj CV
-                        </a>
+                    <!-- Placeholder for hero visual content -->
+                    <div class="text-center">
+                        <i class="fas fa-brain" style="font-size: 6rem; color: #667eea; opacity: 0.3;"></i>
+                        <p class="text-muted mt-3">Sztuczna inteligencja analizuje Twoje CV</p>
                     </div>
                 </div>
             </div>
@@ -223,6 +195,60 @@
             <!-- Left Column: Upload and Job Input -->
             <div class="col-lg-5 mb-4">
         <!-- CV upload section -->
+        <!-- Pricing Card Section -->
+        <div class="card cv-processing-card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">
+                    <button class="btn btn-link text-white text-decoration-none p-0 w-100 text-start" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#pricing-collapse"
+                            aria-expanded="true" 
+                            aria-controls="pricing-collapse">
+                        <i class="fas fa-rocket me-2"></i>Profesjonalna analiza AI - PLN 9,99
+                        <i class="fas fa-chevron-down float-end mt-1 collapse-icon"></i>
+                    </button>
+                </h3>
+            </div>
+            <div class="collapse show" id="pricing-collapse">
+                <div class="card-body" style="padding: 2rem;">
+                    <div class="pricing-card-modern">
+                        <div class="pricing-header text-center mb-4">
+                            <div class="pricing-icon-modern mb-3">
+                                <i class="fas fa-rocket" style="font-size: 3rem; color: #667eea;"></i>
+                            </div>
+                            <h4 class="pricing-title-modern">Profesjonalna analiza AI</h4>
+                            <div class="pricing-amount-modern">
+                                <span class="currency">PLN</span>
+                                <span class="price">9,99</span>
+                            </div>
+                        </div>
+                        <div class="pricing-features-modern mb-4">
+                            <div class="feature-item-modern mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Analiza CV przez AI</span>
+                            </div>
+                            <div class="feature-item-modern mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Optymalizacja pod stanowisko</span>
+                            </div>
+                            <div class="feature-item-modern mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Ocena i rekomendacje</span>
+                            </div>
+                            <div class="feature-item-modern mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>List motywacyjny</span>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('checkout') }}" class="btn btn-success w-100 py-3 fw-bold">
+                            <i class="fas fa-credit-card me-2"></i>Zapłać i optymalizuj CV
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card cv-processing-card mb-4">
             <div class="card-header bg-primary text-white">
                 <h3 class="mb-0">
