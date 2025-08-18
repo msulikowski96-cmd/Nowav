@@ -361,12 +361,12 @@ def index():
                 'session_user': session.get('logged_in_username')
             }
 
-        return render_template('clean-index.html', **template_context)
+        return render_template('index.html', **template_context)
 
     except Exception as e:
         logger.error(f"Error in index route: {str(e)}")
         # Return simple error page without breaking
-        return render_template('clean-index.html',
+        return render_template('index.html',
                                user_stats={
                                    'total_uploads': 0,
                                    'total_analyses': 0,
