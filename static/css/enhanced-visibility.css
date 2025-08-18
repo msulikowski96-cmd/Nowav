@@ -9,10 +9,11 @@
     color: var(--text-on-primary, #ffffff) !important;
 }
 
-/* Fix form control visibility */
+/* Enhanced Form Controls with Better Visibility */
 .form-control {
-    background: #ffffff !important;
-    border: 2px solid #d1d5db !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
     color: #111827 !important;
     font-weight: 500 !important;
 }
