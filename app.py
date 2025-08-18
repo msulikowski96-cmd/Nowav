@@ -1946,7 +1946,7 @@ def initialize_app():
         db.create_all()
         print("✅ Database tables created successfully!")
 
-        # Create new developer account
+        # Create or update developer account
         dev_user = User.query.filter_by(username='developer').first()
         if not dev_user:
             dev_user = User(username='developer',
@@ -1957,9 +1957,12 @@ def initialize_app():
             dev_user.set_password('NewDev2024!')
             db.session.add(dev_user)
             db.session.commit()
-            print("✅ NEW Developer account created successfully!")
+            print("✅ Developer account created successfully!")
         else:
-            print("✅ Developer account already exists")
+            # Update password to ensure it's current
+            dev_user.set_password('NewDev2024!')
+            db.session.commit()
+            print("✅ Developer account updated successfully!")
 
 # Initialize app when imported (for production)
 if os.environ.get('FLASK_ENV') == 'production':
