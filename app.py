@@ -282,10 +282,17 @@ def parse_ai_json_response(ai_result):
             clean_result = clean_result[json_start:json_end]
 
         parsed_result = json.loads(clean_result)
-        optimized_cv = parsed_result.get('optimized_cv', ai_result)
-        logger.debug(
-            f"Successfully parsed AI response, extracted optimized_cv")
-        return optimized_cv
+        
+        # Handle different response types
+        if 'optimized_cv' in parsed_result:
+            return parsed_result.get('optimized_cv')
+        elif 'improved_cv' in parsed_result:
+            return parsed_result.get('improved_cv')
+        elif 'result' in parsed_result:
+            return parsed_result.get('result')
+        else:
+            # Return the entire parsed result if no specific key found
+            return parsed_result
 
     except (json.JSONDecodeError, TypeError) as e:
         logger.warning(
@@ -1694,7 +1701,12 @@ def generate_improve_cv():
             payment_verified=payment_verified or is_developer)
 
         # Parse JSON response
-        result = parse_ai_json_response(ai_result)
+        try:
+            result = parse_ai_json_response(ai_result)
+        except Exception as parse_error:
+            logger.error(f"Error parsing AI result: {parse_error}")
+            # If JSON parsing fails, treat as plain text
+            result = ai_result
 
         # Store improved CV for comparison
         if isinstance(result, dict) and 'improved_cv' in result:
@@ -1721,6 +1733,10 @@ def generate_improve_cv():
                 db.session.commit()
             except Exception as e:
                 logger.error(f"Error saving improved CV result: {str(e)}")
+
+        # Ensure we always return a proper result
+        if not result:
+            result = "Nie udało się wygenerować poprawionego CV. Spróbuj ponownie."
 
         return jsonify({
             'success': True,

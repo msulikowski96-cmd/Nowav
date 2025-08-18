@@ -65,12 +65,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.redirected && response.url.includes('/login')) {
                     throw new Error('You must be logged in to upload CV. Please log in first.');
                 }
-                
+
                 // Check if response is ok
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 return response.json();
             })
             .then(data => {
@@ -154,11 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     displayResults(data.result, 'improve_cv');
                     showSuccess(data.message);
                 } else {
-                    if (data.payment_required) {
-                        showPaymentRequired(data.message);
-                    } else {
-                        showError(data.message);
-                    }
+                    showError(data.message);
                 }
             } catch (error) {
                 console.error('Error improving CV:', error);
@@ -453,6 +449,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (uploadErrorAlert) uploadErrorAlert.style.display = 'block';
     }
 
+    // Helper function to show success messages (used by improve CV)
+    function showSuccess(message) {
+        // Assuming there's a success alert specifically for improve CV or general success message
+        // For now, we'll reuse uploadSuccessAlert logic, but ideally, a dedicated one might be better.
+        if (uploadSuccessAlert) {
+            // Find a more specific way to display this success message if needed, e.g., a different element
+            uploadSuccessAlert.querySelector('.alert-message').textContent = message; // Assuming a structure like <div id="upload-success"><span class="alert-message"></span></div>
+            uploadSuccessAlert.style.display = 'block';
+        }
+    }
+
     // Helper function to show status messages
     function showStatus(message, type = 'info') {
         // Create or update status container
@@ -483,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusContainer.className = `alert alert-${type} mb-3`;
             statusContainer.innerHTML = message;
         }
-        
+
         statusContainer.style.display = 'block';
 
         // Auto-hide info messages after 8 seconds (longer for job analysis)
@@ -497,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create collapsible job analysis
     function createCollapsibleJobAnalysis(message) {
         const collapseId = 'job-analysis-' + Date.now();
-        
+
         return `
             <div class="job-analysis-container">
                 <div class="d-flex justify-content-between align-items-center">
@@ -678,3 +685,61 @@ document.addEventListener('DOMContentLoaded', function() {
     // CV processing form
     const processForm = document.getElementById('process-form');
 });
+
+// Helper function to display results (modified for 'improve_cv' type)
+function displayResults(result, type) {
+    const previewContainer = document.getElementById('cvDataPreview');
+    if (previewContainer) {
+        if (type === 'improve_cv') {
+            // Handle improved CV result - może być string lub object
+            if (typeof result === 'object' && result.improved_cv) {
+                previewContainer.innerHTML = `<div class="improved-cv">${result.improved_cv}</div>`;
+            } else if (typeof result === 'string') {
+                previewContainer.innerHTML = `<div class="improved-cv">${result}</div>`;
+            } else {
+                previewContainer.innerHTML = '<div class="error">Nieprawidłowy format odpowiedzi</div>';
+            }
+        } else {
+            previewContainer.innerHTML = result;
+        }
+    }
+}
+
+// Placeholder functions (assuming they are defined elsewhere or globally)
+function setLoading(isLoading) {
+    // Implementation for setting loading state
+    console.log("Setting loading state:", isLoading);
+}
+
+function showProcessing(message) {
+    // Implementation for showing processing message
+    console.log("Showing processing:", message);
+}
+
+function hideProcessing() {
+    // Implementation for hiding processing message
+    console.log("Hiding processing.");
+}
+
+function displayJobAnalysis(analysis) {
+    // Implementation for displaying job analysis
+    console.log("Displaying job analysis:", analysis);
+    const analysisContainer = document.getElementById('job-analysis-container'); // Assuming such a container exists
+    if (analysisContainer) {
+        let html = '<h4>Job Analysis</h4>';
+        if (analysis.job_title) html += `<p><strong>Title:</strong> ${analysis.job_title}</p>`;
+        if (analysis.industry) html += `<p><strong>Industry:</strong> ${analysis.industry}</p>`;
+        if (analysis.key_requirements) {
+            html += '<p><strong>Key Requirements:</strong></p><ul>';
+            analysis.key_requirements.forEach(req => html += `<li>${req}</li>`);
+            html += '</ul>';
+        }
+        if (analysis.industry_keywords) {
+            html += '<p><strong>Keywords:</strong></p><ul>';
+            analysis.industry_keywords.forEach(kw => html += `<li>${kw}</li>`);
+            html += '</ul>';
+        }
+        analysisContainer.innerHTML = html;
+        analysisContainer.style.display = 'block';
+    }
+}
