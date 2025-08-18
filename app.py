@@ -1975,7 +1975,7 @@ if __name__ == '__main__':
     if os.environ.get('FLASK_ENV') != 'production':
         initialize_app()
 
-    # Replit używa PORT, lokalnie fallback na 5000
+    # Use PORT from environment (Render sets this automatically)
     port = int(os.environ.get('PORT', 5000))
 
     # Log startup info
@@ -1984,3 +1984,11 @@ if __name__ == '__main__':
     # Ensure proper binding
     debug_mode = os.environ.get("DEBUG", "False").lower() == "true"
     app.run(host='0.0.0.0', port=port, debug=debug_mode, threaded=True)
+
+# For production deployment (Gunicorn will import this)
+def create_app():
+    """Application factory for production deployment"""
+    # Initialize app for production
+    if not app.config.get('TESTING'):
+        initialize_app()
+    return app

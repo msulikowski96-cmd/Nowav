@@ -4,18 +4,24 @@ services:
     name: cv-optimizer-pro
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    startCommand: gunicorn app:create_app() --config gunicorn.conf.py
     plan: free
     region: oregon
     branch: main
     healthCheckPath: /
+    disk:
+      name: cv-optimizer-disk
+      sizeGB: 1
+      mountPath: /tmp
     envVars:
       - key: FLASK_ENV
         value: production
       - key: DEBUG
         value: false
-      - key: PORT
-        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: WEB_CONCURRENCY
+        value: "2"
       - key: OPENROUTER_API_KEY
         sync: false
       - key: STRIPE_SECRET_KEY
@@ -30,3 +36,8 @@ services:
         sync: false
       - key: ENCRYPTION_KEY
         sync: false
+
+  - type: pserv
+    name: cv-optimizer-db
+    plan: free
+    region: oregon
