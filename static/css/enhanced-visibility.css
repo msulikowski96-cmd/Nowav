@@ -462,14 +462,24 @@ input[type="file"] {
 
     /* Job analysis mobile fixes */
     .job-analysis-container {
-        padding: 15px !important;
         margin: 15px 0 !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
+        transform: none !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+
+    .job-analysis-container:hover {
+        transform: none !important;
+    }
+
+    .job-analysis-header {
+        padding: 15px !important;
+        border-radius: 12px 12px 0 0 !important;
     }
 
     .job-analysis-content {
         padding: 15px !important;
-        border-radius: 8px !important;
+        border-radius: 0 0 12px 12px !important;
     }
 
     /* File upload mobile fixes */
