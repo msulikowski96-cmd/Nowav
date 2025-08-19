@@ -134,7 +134,18 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png', _external=True) }}">
 </head>
-<body class="{% if current_user.is_authenticated %}user-authenticated{% else %}user-not-authenticated{% endif %}"{% if current_user.is_authenticated %} data-user-authenticated="true"{% else %} data-user-authenticated="false"{% endif %}></body>
+<body class="{% if current_user.is_authenticated %}user-authenticated{% else %}user-not-authenticated{% endif %}"{% if current_user.is_authenticated %} data-user-authenticated="true"{% else %} data-user-authenticated="false"{% endif %}>
+
+    <!-- Authentication status for JavaScript -->
+    <script>
+        window.CV_OPTIMIZER = {
+            isAuthenticated: {{ 'true' if current_user.is_authenticated else 'false' }},
+            user: {
+                username: {{ ('"%s"' % current_user.username) if current_user.is_authenticated else 'null' }},
+                id: {{ current_user.id if current_user.is_authenticated else 'null' }}
+            }
+        };
+    </script>
     <!-- Particle Background Effect -->
     <div class="particle-background"></div>
 

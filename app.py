@@ -361,6 +361,15 @@ def index():
             print(f"🔍 User: {current_user.username}, ID: {current_user.id}")
             # Clear the just logged in flag if it exists
             session.pop('user_just_logged_in', None)
+            # Ensure session data is consistent
+            session['logged_in_username'] = current_user.username
+            session['user_id'] = current_user.id
+            session['user_authenticated'] = True
+        else:
+            # Clear any stale session data
+            session.pop('logged_in_username', None)
+            session.pop('user_id', None)
+            session['user_authenticated'] = False
 
         # Initialize user stats
         user_stats = {
@@ -391,14 +400,17 @@ def index():
         template_context = {
             'user_stats': user_stats,
             'current_user': current_user,
-            'user_authenticated': current_user.is_authenticated
+            'user_authenticated': current_user.is_authenticated,
+            'is_authenticated': current_user.is_authenticated,  # Dodane dla JS
+            'user_data': {
+                'username': current_user.username if current_user.is_authenticated else None,
+                'id': current_user.id if current_user.is_authenticated else None,
+                'authenticated': current_user.is_authenticated
+            }
         }
         
-        # Synchronizuj dane sesji z Flask-Login
+        # Set body class for proper styling
         if current_user.is_authenticated:
-            session['logged_in_username'] = current_user.username
-            session['user_id'] = current_user.id
-            # Set body class for proper styling
             template_context['body_class'] = 'user-authenticated'
         else:
             template_context['body_class'] = 'user-not-authenticated'
@@ -412,7 +424,8 @@ def index():
                 'username': current_user.username,
                 'user_id': current_user.id,
                 'session_user': session.get('logged_in_username'),
-                'session_user_id': session.get('user_id')
+                'session_user_id': session.get('user_id'),
+                'session_auth': session.get('user_authenticated')
             }
 
         return render_template('index.html', **template_context)
@@ -428,7 +441,8 @@ def index():
                                    'improvement_score': 0
                                },
                                current_user=current_user,
-                               user_authenticated=current_user.is_authenticated)
+                               user_authenticated=current_user.is_authenticated,
+                               is_authenticated=current_user.is_authenticated)
 
 
 def get_user_level(cv_count):
@@ -510,9 +524,11 @@ def login():
                 session.permanent = True
                 session['logged_in_username'] = user.username
                 session['user_id'] = user.id
+                session['user_authenticated'] = True
                 session['user_just_logged_in'] = True
 
                 print(f"✅ User {user.username} logged in successfully")
+                print(f"✅ Session data set: user_id={session.get('user_id')}, username={session.get('logged_in_username')}")
                 flash(f'Witaj ponownie, {user.username}!', 'success')
 
                 # Redirect to next page or index
@@ -571,13 +587,21 @@ def register():
 @login_required
 def logout():
     try:
+        username = current_user.username if current_user.is_authenticated else 'Unknown'
+        print(f"🔍 Logging out user: {username}")
+        
+        # Logout user first
+        logout_user()
+        
         # Clear session completely
         session.clear()
-        # Logout user
-        logout_user()
+        
+        print(f"✅ User {username} logged out successfully")
         flash('Zostałeś wylogowany.', 'info')
     except Exception as e:
         print(f"Logout error: {str(e)}")
+        # Force clear session anyway
+        session.clear()
         flash('Wylogowano.', 'info')
 
     return redirect(url_for('index'))

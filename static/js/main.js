@@ -27,11 +27,16 @@ function initializeApp() {
 }
 
 function logUserAuthStatus() {
-    // Get authentication status from template data or session
-    const isAuthenticated = document.body.classList.contains('user-authenticated') || 
+    // Get authentication status from global variable set by template
+    const isAuthenticated = window.CV_OPTIMIZER?.isAuthenticated || 
+                           document.body.classList.contains('user-authenticated') || 
                            document.querySelector('[data-user-authenticated]')?.dataset.userAuthenticated === 'true';
 
     console.log('User authentication status:', isAuthenticated ? 'authenticated' : 'not authenticated');
+    
+    if (window.CV_OPTIMIZER?.user?.username) {
+        console.log('Authenticated user:', window.CV_OPTIMIZER.user.username);
+    }
 
     // Update UI based on authentication status
     updateAuthenticationUI(isAuthenticated);
