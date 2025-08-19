@@ -27,7 +27,7 @@
    ```
 
 3. **Deployment Configuration**
-   - **Build Command:** `pip install -r requirements.txt`
+   - **Build Command:** `pip install -r requirements.txt
    - **Start Command:** `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
    - **Auto-deploy:** Enable for main branch
 
