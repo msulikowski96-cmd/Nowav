@@ -1116,6 +1116,53 @@ input[type="file"]:hover {
         transform: translateX(4px) !important;
     }
 
+    /* Dropdown menu fixes */
+    .dropdown-menu {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        margin-top: 8px !important;
+        min-width: 200px !important;
+    }
+
+    .dropdown-item {
+        padding: 12px 20px !important;
+        font-size: 15px !important;
+        color: #334155 !important;
+        border-radius: 8px !important;
+        margin: 4px 8px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .dropdown-item:hover {
+        background: rgba(99, 102, 241, 0.1) !important;
+        color: #6366f1 !important;
+        transform: translateX(4px) !important;
+    }
+
+    .dropdown-divider {
+        margin: 8px 16px !important;
+        border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Ensure dropdown works on mobile */
+    @media (max-width: 991.98px) {
+        .dropdown-menu {
+            position: static !important;
+            transform: none !important;
+            margin-top: 0 !important;
+            margin-left: 20px !important;
+            width: calc(100% - 40px) !important;
+        }
+        
+        .dropdown-toggle::after {
+            margin-left: auto !important;
+        }
+    }
+    }
+
     .navbar-toggler {
         border: none !important;
         padding: 8px 12px !important;

@@ -669,13 +669,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Close mobile menu when clicking nav links
-        const navLinks = navbarCollapse.querySelectorAll('.nav-link');
+        // Close mobile menu when clicking nav links (but not dropdown toggles)
+        const navLinks = navbarCollapse.querySelectorAll('.nav-link:not(.dropdown-toggle)');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
                 if (bsCollapse && navbarCollapse.classList.contains('show')) {
                     bsCollapse.hide();
+                }
+            });
+        });
+    }
+
+    // Initialize Bootstrap dropdowns
+    const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+    const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
+
+    // Handle dropdown on mobile
+    if (window.innerWidth <= 991) {
+        dropdownElementList.forEach(dropdown => {
+            dropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dropdownMenu = this.nextElementSibling;
+                if (dropdownMenu) {
+                    dropdownMenu.classList.toggle('show');
                 }
             });
         });
