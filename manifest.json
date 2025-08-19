@@ -65,11 +65,7 @@
     }
   ],
   "prefer_related_applications": false,
-  "scope_extensions": [
-    {
-      "origin": "https://warm-alysia-mateusz-9b323a7f.replit.app"
-    }
-  ],
+  "scope_extensions": [],
   "share_target": {
     "action": "/",
     "method": "GET",

@@ -2,7 +2,7 @@ modules = ["web", "python-3.11", "nodejs-20"]
 run = "python app.py"
 
 [nix]
-packages = ["cargo", "freetype", "glibcLocales", "libiconv", "libxcrypt", "openssl", "pkg-config", "rustc"]
+packages = ["cargo", "freetype", "glibcLocales", "libiconv", "libxcrypt", "openssl", "pkg-config", "rustc", "xcodebuild", "zlib"]
 channel = "stable-25_05"
 
 [[ports]]

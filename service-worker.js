@@ -2,10 +2,12 @@ const CACHE_NAME = 'cv-optimizer-v3';
 const urlsToCache = [
     '/',
     '/static/css/custom.css',
-    '/static/css/modern-premium.css',
+    '/static/css/modern-premium.css', 
     '/static/js/main.js',
     '/static/icons/icon-192x192.png',
     '/static/icons/icon-512x512.png',
+    '/static/icons/upload-96x96.png',
+    '/static/icons/premium-96x96.png',
     '/manifest.json'
 ];
 
