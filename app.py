@@ -344,6 +344,11 @@ def monitor_session_size():
 def index():
     """Main index route"""
     try:
+        # Debug authentication status
+        print(f"🔍 Index route - current_user.is_authenticated: {current_user.is_authenticated}")
+        if current_user.is_authenticated:
+            print(f"🔍 User: {current_user.username}, ID: {current_user.id}")
+        
         # Initialize user stats
         user_stats = {
             'total_uploads': 0,
@@ -370,7 +375,10 @@ def index():
                 logger.error(f"Error calculating user stats: {str(e)}")
 
         # Prepare template context
-        template_context = {'user_stats': user_stats}
+        template_context = {
+            'user_stats': user_stats,
+            'current_user': current_user
+        }
 
         # Add debug info only for developer
         if current_user.is_authenticated and hasattr(

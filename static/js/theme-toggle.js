@@ -2,6 +2,13 @@
 console.log('Theme toggle script loaded');
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Theme toggle script loaded');
+
+    // Debug authentication status
+    const userDropdown = document.getElementById('navbarDropdown');
+    const authStatus = userDropdown ? 'authenticated' : 'not authenticated';
+    console.log('User authentication status:', authStatus);
+
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const icon = themeToggle?.querySelector('i');
