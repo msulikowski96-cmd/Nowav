@@ -594,11 +594,43 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.serviceWorker.register('/service-worker.js')
                 .then(function(registration) {
                     console.log('SW registered: ', registration);
+                    
+                    // Check for updates
+                    registration.addEventListener('updatefound', function() {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', function() {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showUpdateNotification();
+                            }
+                        });
+                    });
                 })
                 .catch(function(registrationError) {
                     console.log('SW registration failed: ', registrationError);
                 });
         });
+    }
+
+    // Show update notification
+    function showUpdateNotification() {
+        const updateBanner = document.createElement('div');
+        updateBanner.className = 'update-banner alert alert-warning position-fixed';
+        updateBanner.style.cssText = 'bottom: 20px; right: 20px; z-index: 1050; max-width: 350px;';
+        updateBanner.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>🔄 Dostępna aktualizacja!</strong><br>
+                    <small>Odśwież aby załadować najnowszą wersję</small>
+                </div>
+                <button class="btn btn-sm btn-warning" onclick="updateApp()">Odśwież</button>
+            </div>
+        `;
+        document.body.appendChild(updateBanner);
+    }
+
+    // Update app
+    function updateApp() {
+        window.location.reload();
     }
 
     // Handle share target

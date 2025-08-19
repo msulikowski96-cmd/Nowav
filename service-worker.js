@@ -41,7 +41,14 @@ self.addEventListener('fetch', function(event) {
             })
             .catch(function(error) {
                 console.log('SW fetch failed:', error);
-                return fetch(event.request);
+                // Provide offline fallback
+                if (event.request.destination === 'document') {
+                    return caches.match('/');
+                }
+                return new Response('Offline - sprawdź połączenie internetowe', {
+                    status: 503,
+                    statusText: 'Service Unavailable'
+                });
             })
     );
 });
