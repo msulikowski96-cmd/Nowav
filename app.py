@@ -321,8 +321,8 @@ def monitor_session_size():
     Monitoruj rozmiar sesji przed każdym requestem
     """
     try:
-        # Debug authentication status for specific routes
-        if request.endpoint in ['index', 'login', 'register', 'process_cv']:
+        # Debug authentication status tylko w trybie development
+        if app.config.get('DEBUG') and request.endpoint in ['index', 'login', 'register', 'process_cv']:
             print(f"🔍 Route: {request.endpoint}")
             print(f"🔍 current_user.is_authenticated: {current_user.is_authenticated}")
             if current_user.is_authenticated:
@@ -393,6 +393,11 @@ def index():
             'current_user': current_user,
             'user_authenticated': current_user.is_authenticated
         }
+        
+        # Synchronizuj dane sesji z Flask-Login
+        if current_user.is_authenticated:
+            session['logged_in_username'] = current_user.username
+            session['user_id'] = current_user.id
 
         # Add debug info only for developer
         if current_user.is_authenticated and hasattr(
@@ -497,7 +502,7 @@ def login():
                 # Login user with Flask-Login - this handles session management
                 login_user(user, remember=form.remember_me.data)
 
-                # Set additional session data for compatibility
+                # Set additional session data for compatibility (ograniczone dane)
                 session.permanent = True
                 session['logged_in_username'] = user.username
                 session['user_id'] = user.id
