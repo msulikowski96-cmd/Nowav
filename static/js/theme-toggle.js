@@ -1,3 +1,47 @@
+// Theme Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Theme toggle script loaded');
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    htmlElement.setAttribute('data-bs-theme', currentTheme);
+
+    // Update toggle button icon
+    updateThemeIcon(currentTheme);
+
+    if (themeToggle) {
+        console.log('Theme toggle button found');
+        themeToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            console.log('Switching theme from', currentTheme, 'to', newTheme);
+
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+    } else {
+        console.log('Theme toggle button not found');
+    }
+
+    function updateThemeIcon(theme) {
+        const themeIconDark = document.querySelector('.theme-icon-dark');
+        const themeIconLight = document.querySelector('.theme-icon-light');
+
+        if (theme === 'dark') {
+            if (themeIconDark) themeIconDark.style.display = 'none';
+            if (themeIconLight) themeIconLight.style.display = 'inline';
+        } else {
+            if (themeIconDark) themeIconDark.style.display = 'inline';
+            if (themeIconLight) themeIconLight.style.display = 'none';
+        }
+    }
+});
 
 // Theme Toggle Functionality
 class ThemeToggle {
@@ -58,7 +102,7 @@ class ThemeToggle {
 
     applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        
+
         // Update meta theme-color for mobile browsers
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
@@ -69,7 +113,7 @@ class ThemeToggle {
     updateToggleButtons() {
         const lightBtn = document.getElementById('light-btn');
         const darkBtn = document.getElementById('dark-btn');
-        
+
         lightBtn.classList.toggle('active', this.currentTheme === 'light');
         darkBtn.classList.toggle('active', this.currentTheme === 'dark');
     }

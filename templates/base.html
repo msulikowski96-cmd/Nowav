@@ -112,9 +112,9 @@
                         {% if current_user.is_authenticated %}
                             <!-- Status indicator -->
                             <li class="nav-item">
-                                <span class="navbar-text me-3" style="color: rgba(255,255,255,0.95);">
-                                    <i class="fas fa-circle me-1" style="font-size: 8px; color: #4facfe;"></i>
-                                    <strong style="color: var(--text-on-primary);">Zalogowany: {{ current_user.username }}</strong>
+                                <span class="navbar-text me-3 d-flex align-items-center" style="color: rgba(255,255,255,0.95);">
+                                    <i class="fas fa-circle me-2" style="font-size: 8px; color: #00ff88;"></i>
+                                    <span style="color: #ffffff; font-weight: 500;">{{ current_user.get_full_name() or current_user.username }}</span>
                                 </span>
                             </li>
                             <!-- Główne funkcje -->
@@ -189,6 +189,14 @@
                                 </a>
                             </li>
                         {% endif %}
+                        
+                        <!-- Dark Mode Toggle -->
+                        <li class="nav-item">
+                            <button class="nav-link border-0 bg-transparent" id="theme-toggle" title="Przełącz motyw">
+                                <i class="fas fa-moon theme-icon-dark"></i>
+                                <i class="fas fa-sun theme-icon-light"></i>
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -339,20 +347,6 @@
                 banner.remove();
             }
         }
-            installBanner.innerHTML = `
-                <div class="alert alert-info alert-dismissible fade show position-fixed" style="bottom: 20px; right: 20px; z-index: 1050; max-width: 300px;">
-                    <strong>Zainstaluj aplikację!</strong> Dodaj CV Optimizer Pro do ekranu głównego.
-                    <button class="btn btn-sm btn-primary mt-2 w-100" onclick="installPWA()">Instaluj</button>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-            document.body.appendChild(installBanner);
-
-            setTimeout(() => {
-                const banner = document.querySelector('.alert');
-                if (banner) banner.remove();
-            }, 10000);
-        }
 
         window.installPWA = async () => {
             if (deferredPrompt) {
@@ -360,7 +354,7 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 console.log(`User response to the install prompt: ${outcome}`);
                 deferredPrompt = null;
-                document.querySelector('.alert')?.remove();
+                document.querySelector('.alert, .install-banner')?.remove();
             }
         };
         
