@@ -253,7 +253,7 @@ def clean_session_before_new_data():
     keys_to_keep = [
         '_user_id', '_fresh', 'csrf_token', 'payment_verified', 'cv_upload_id',
         'cv_builder_paid', 'user_just_logged_in', 'logged_in_username',
-        'user_id'
+        'user_id', '_id', '_permanent', 'user_logged_in'
     ]
 
     # Usuń tylko duże dane, nie podstawowe informacje o użytkowniku
@@ -321,6 +321,16 @@ def monitor_session_size():
     Monitoruj rozmiar sesji przed każdym requestem
     """
     try:
+        # Debug authentication status for specific routes
+        if request.endpoint in ['index', 'login', 'register', 'process_cv']:
+            print(f"🔍 Route: {request.endpoint}")
+            print(f"🔍 current_user.is_authenticated: {current_user.is_authenticated}")
+            if current_user.is_authenticated:
+                print(f"🔍 current_user.username: {current_user.username}")
+            print(f"🔍 session logged_in_username: {session.get('logged_in_username')}")
+            print(f"🔍 session user_id: {session.get('user_id')}")
+            print(f"🔍 Flask-Login _user_id: {session.get('_user_id')}")
+
         import pickle
         session_size = len(pickle.dumps(dict(session)))
 
@@ -349,6 +359,8 @@ def index():
         print(f"🔍 Index route - current_user.is_authenticated: {current_user.is_authenticated}")
         if current_user.is_authenticated:
             print(f"🔍 User: {current_user.username}, ID: {current_user.id}")
+            # Clear the just logged in flag if it exists
+            session.pop('user_just_logged_in', None)
 
         # Initialize user stats
         user_stats = {
@@ -375,10 +387,11 @@ def index():
             except Exception as e:
                 logger.error(f"Error calculating user stats: {str(e)}")
 
-        # Prepare template context
+        # Prepare template context - ensure current_user is always available
         template_context = {
             'user_stats': user_stats,
-            'current_user': current_user
+            'current_user': current_user,
+            'user_authenticated': current_user.is_authenticated
         }
 
         # Add debug info only for developer
@@ -388,7 +401,9 @@ def index():
             template_context['debug_info'] = {
                 'is_authenticated': current_user.is_authenticated,
                 'username': current_user.username,
-                'session_user': session.get('logged_in_username')
+                'user_id': current_user.id,
+                'session_user': session.get('logged_in_username'),
+                'session_user_id': session.get('user_id')
             }
 
         return render_template('index.html', **template_context)
@@ -402,7 +417,9 @@ def index():
                                    'total_analyses': 0,
                                    'user_level': 'Początkujący',
                                    'improvement_score': 0
-                               })
+                               },
+                               current_user=current_user,
+                               user_authenticated=current_user.is_authenticated)
 
 
 def get_user_level(cv_count):
@@ -450,6 +467,7 @@ def service_worker():
 def login():
     """User login route"""
     if current_user.is_authenticated:
+        flash('Jesteś już zalogowany!', 'info')
         return redirect(url_for('index'))
 
     form = LoginForm()
@@ -472,20 +490,18 @@ def login():
                 print(f"🔍 Password check: {user.check_password(password)}")
 
             if user and user.is_active and user.check_password(password):
-                # Clear any existing session data first
-                session.clear()
-
                 # Update login statistics
                 user.update_login()
                 db.session.commit()
 
-                # Login user with Flask-Login
+                # Login user with Flask-Login - this handles session management
                 login_user(user, remember=form.remember_me.data)
 
-                # Set session data
+                # Set additional session data for compatibility
                 session.permanent = True
                 session['logged_in_username'] = user.username
                 session['user_id'] = user.id
+                session['user_just_logged_in'] = True
 
                 print(f"✅ User {user.username} logged in successfully")
                 flash(f'Witaj ponownie, {user.username}!', 'success')
@@ -510,6 +526,7 @@ def login():
 def register():
     """User registration route"""
     if current_user.is_authenticated:
+        flash('Jesteś już zalogowany!', 'info')
         return redirect(url_for('index'))
 
     form = RegistrationForm()
