@@ -149,6 +149,30 @@
                                 </a>
                             </li>
 
+                            <!-- System Developer Menu (tylko dla developerów) -->
+                            {% if current_user.is_developer() %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="developerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-code me-1"></i>System Developer
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="developerDropdown">
+                                    <li><a class="dropdown-item" href="{{ url_for('index') }}">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Panel administratora
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('premium_dashboard') }}">
+                                        <i class="fas fa-users me-2"></i>Zarządzaj użytkownikami
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('payment_options') }}">
+                                        <i class="fas fa-chart-bar me-2"></i>Statystyki systemu
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#">
+                                        <i class="fas fa-database me-2"></i>Zarządzaj bazą danych
+                                    </a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+
                             <!-- Menu użytkownika -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

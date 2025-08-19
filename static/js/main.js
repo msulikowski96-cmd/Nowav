@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.serviceWorker.register('/service-worker.js')
                 .then(function(registration) {
                     console.log('SW registered: ', registration);
-                    
+
                     // Check for updates
                     registration.addEventListener('updatefound', function() {
                         const newWorker = registration.installing;
@@ -657,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu handling
     const navbarToggler = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.querySelector('.navbar-collapse');
-    
+
     if (navbarToggler && navbarCollapse) {
         // Close mobile menu when clicking outside
         document.addEventListener('click', function(e) {
@@ -786,6 +786,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // CV processing form
     const processForm = document.getElementById('process-form');
 });
+
+// Initialize theme (assuming this function exists elsewhere or is intended to be global)
+function initializeTheme() {
+    console.log("Initializing theme...");
+    // Example: Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        // Default to light or system preference
+        // const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // if (prefersDark) {
+        //     document.body.classList.add('dark-theme');
+        // }
+    }
+}
+
+
+// Initialize dropdown menus
+function initializeDropdowns() {
+    // Ensure Bootstrap dropdowns are properly initialized
+    const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+    const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
+
+    // Add click event listeners for mobile
+    dropdownElementList.forEach(dropdown => {
+        dropdown.addEventListener('click', function(e) {
+            // On mobile, ensure dropdown opens/closes properly
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                const dropdownMenu = this.nextElementSibling;
+                if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                    dropdownMenu.classList.toggle('show');
+                }
+            }
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+}
 
 // Helper function to display results (modified for 'improve_cv' type)
 function displayResults(result, type) {
