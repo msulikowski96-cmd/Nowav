@@ -15,6 +15,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import A4
 import io
 import base64
 from models import db, User, CVUpload, AnalysisResult
@@ -348,7 +349,7 @@ def index():
         print(f"🔍 Index route - current_user.is_authenticated: {current_user.is_authenticated}")
         if current_user.is_authenticated:
             print(f"🔍 User: {current_user.username}, ID: {current_user.id}")
-        
+
         # Initialize user stats
         user_stats = {
             'total_uploads': 0,
@@ -473,7 +474,7 @@ def login():
             if user and user.is_active and user.check_password(password):
                 # Clear any existing session data first
                 session.clear()
-                
+
                 # Update login statistics
                 user.update_login()
                 db.session.commit()
@@ -497,7 +498,7 @@ def login():
             else:
                 print(f"❌ Login failed for: {username_or_email}")
                 flash('Nieprawidłowa nazwa użytkownika/email lub hasło.', 'error')
-                
+
         except Exception as e:
             print(f"❌ Login error: {str(e)}")
             flash('Wystąpił błąd podczas logowania. Spróbuj ponownie.', 'error')
@@ -552,7 +553,7 @@ def logout():
     except Exception as e:
         print(f"Logout error: {str(e)}")
         flash('Wylogowano.', 'info')
-    
+
     return redirect(url_for('index'))
 
 
@@ -664,7 +665,7 @@ def cv_generator():
     """CV Generator page"""
     # Sprawdź dostęp do kreatora CV
     cv_builder_access = False
-    if current_user.username == 'developer':
+    if current_user.is_developer():
         cv_builder_access = True
     elif session.get('cv_builder_paid', False):
         cv_builder_access = True
@@ -691,7 +692,7 @@ def about():
 @app.route('/debug-session')
 def debug_session():
     """Debug endpoint to check session state"""
-    if not current_user.is_authenticated or current_user.username != 'developer':
+    if not current_user.is_authenticated or not current_user.is_developer():
         return "Access denied", 403
 
     debug_info = {
@@ -710,7 +711,7 @@ def debug_session():
 @app.route('/clear-cache')
 def clear_cache():
     """Clear all session data and cache"""
-    if current_user.is_authenticated and current_user.username == 'developer':
+    if current_user.is_authenticated and current_user.is_developer():
         session.clear()
         flash('Cache i sesja zostały wyczyszczone!', 'success')
         return redirect(url_for('index'))
@@ -1197,8 +1198,8 @@ def generate_ai_cv():
         }
 
         # Sprawdź dostęp do funkcji
-        is_developer = current_user.username == 'developer'
-        is_premium_active = current_user.is_premium_active()
+        is_developer = current_user.is_authenticated and current_user.is_developer()
+        is_premium_active = current_user.is_authenticated and current_user.is_premium_active()
 
         # Funkcja tylko dla Premium lub developer
         if not is_developer and not is_premium_active:
@@ -1225,7 +1226,7 @@ def generate_ai_cv():
             cv_content = json.loads(ai_cv_content)
         except json.JSONDecodeError:
             # Fallback parsing
-            cv_content = parse_ai_json_response(ai_cv_content)
+            cv_content = parse_ai_json_response(ai_result)
 
         # Combine basic info with AI-generated content
         complete_cv_data = {
@@ -1445,7 +1446,7 @@ def generate_cv_pdf_file(cv_data):
 def process_cv():
     # PRODUCTION MODE - Payment required except for developer account
     # Sprawdzenie czy to konto developer (darmowy dostęp)
-    if current_user.username == 'developer':
+    if current_user.is_developer():
         # Developer account - free access
         pass
     elif not session.get('payment_verified'):
@@ -1512,8 +1513,8 @@ def process_cv():
         # Sprawdź status płatności i dostępu
         payment_verified = session.get('payment_verified',
                                        False)  # 9,99 PLN - jednorazowe CV
-        is_developer = current_user.username == 'developer'
-        is_premium_active = current_user.is_premium_active(
+        is_developer = current_user.is_authenticated and current_user.is_developer()
+        is_premium_active = current_user.is_authenticated and current_user.is_premium_active(
         )  # 29,99 PLN - Premium
 
         # Definicja funkcji według poziomów dostępu - zgodnie ze screenem
@@ -1726,8 +1727,8 @@ def generate_improve_cv():
             }), 400
 
         # Sprawdź dostęp do funkcji
-        is_developer = current_user.username == 'developer'
-        is_premium_active = current_user.is_premium_active()
+        is_developer = current_user.is_authenticated and current_user.is_developer()
+        is_premium_active = current_user.is_authenticated and current_user.is_premium_active()
         payment_verified = session.get('payment_verified', False)
 
         # Ta funkcja wymaga płatności (9.99 PLN) lub Premium
@@ -1827,8 +1828,8 @@ def apply_recruiter_feedback():
             }), 400
 
         # Sprawdź dostęp do funkcji
-        is_developer = current_user.username == 'developer'
-        is_premium_active = current_user.is_premium_active()
+        is_developer = current_user.is_authenticated and current_user.is_developer()
+        is_premium_active = current_user.is_authenticated and current_user.is_premium_active()
         payment_verified = session.get('payment_verified', False)
 
         # Ta funkcja wymaga płatności (9.99 PLN) lub Premium

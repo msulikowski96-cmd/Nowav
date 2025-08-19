@@ -74,8 +74,12 @@ class User(UserMixin, db.Model):
         self.login_count = (self.login_count or 0) + 1
     
     def is_developer(self):
-        """Check if user is developer"""
+        """Check if user is developer with full access"""
         return self.username == 'developer'
+    
+    def has_full_access(self):
+        """Check if user has full access to all features (developer or premium)"""
+        return self.is_developer() or self.is_premium_active()
     
     
     def to_dict(self):
