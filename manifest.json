@@ -1,4 +1,5 @@
 {
+  "id": "cv-optimizer-pro-pwa",
   "name": "CV Optimizer Pro",
   "short_name": "CV Pro",
   "description": "Professional CV optimization tool with AI-powered analysis",
@@ -8,8 +9,10 @@
   "theme_color": "#667eea",
   "orientation": "portrait",
   "scope": "/",
+  "dir": "ltr",
   "lang": "pl",
   "categories": ["productivity", "business", "utilities"],
+  "iarc_rating_id": "0000000000000000",
   "icons": [
     {
       "src": "/static/icons/icon-192x192.png",
@@ -52,5 +55,29 @@
       "icons": [{ "src": "/static/icons/premium-96x96.png", "sizes": "96x96" }]
     }
   ],
-  "prefer_related_applications": false
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "scope_extensions": [
+    {
+      "origin": "https://warm-alysia-mateusz-9b323a7f.replit.app"
+    }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "display_override": ["window-controls-overlay", "standalone"]
 }

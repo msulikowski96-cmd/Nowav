@@ -591,10 +591,45 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.serviceWorker.register('/service-worker.js')
                 .then(function(registration) {
                     console.log('ServiceWorker registration successful');
+                    
+                    // Register for background sync
+                    if ('sync' in window.ServiceWorkerRegistration.prototype) {
+                        console.log('Background Sync supported');
+                    }
+                    
+                    // Register for periodic sync
+                    if ('periodicSync' in registration) {
+                        console.log('Periodic Background Sync supported');
+                        registration.periodicSync.register('cv-status-sync', {
+                            minInterval: 24 * 60 * 60 * 1000 // 24 hours
+                        });
+                    }
+                    
                 }, function(err) {
                     console.log('ServiceWorker registration failed: ', err);
                 });
         });
+    }
+
+    // Handle share target
+    if (window.location.search.includes('title=') || window.location.search.includes('text=')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedTitle = urlParams.get('title');
+        const sharedText = urlParams.get('text');
+        
+        if (sharedTitle || sharedText) {
+            console.log('Shared content received:', { title: sharedTitle, text: sharedText });
+            // Handle shared content here
+        }
+    }
+
+    // Request notification permission
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().then(function(permission) {
+                console.log('Notification permission:', permission);
+            });
+        }
     }
 
     // CV URL analysis - sprawdź czy element istnieje
