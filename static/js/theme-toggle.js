@@ -1,47 +1,92 @@
 // Theme Toggle Functionality
+console.log('Theme toggle script loaded');
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Theme toggle script loaded');
-
     const themeToggle = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
+    const body = document.body;
+    const icon = themeToggle?.querySelector('i');
 
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    htmlElement.setAttribute('data-bs-theme', currentTheme);
+    console.log('Theme toggle button found');
 
-    // Update toggle button icon
-    updateThemeIcon(currentTheme);
+    // Get saved theme or default to light
+    const savedTheme = localStorage.getItem('theme') || 'light';
 
-    if (themeToggle) {
-        console.log('Theme toggle button found');
-        themeToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            const currentTheme = htmlElement.getAttribute('data-bs-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-            console.log('Switching theme from', currentTheme, 'to', newTheme);
-
-            htmlElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-    } else {
-        console.log('Theme toggle button not found');
-    }
-
-    function updateThemeIcon(theme) {
-        const themeIconDark = document.querySelector('.theme-icon-dark');
-        const themeIconLight = document.querySelector('.theme-icon-light');
-
-        if (theme === 'dark') {
-            if (themeIconDark) themeIconDark.style.display = 'none';
-            if (themeIconLight) themeIconLight.style.display = 'inline';
-        } else {
-            if (themeIconDark) themeIconDark.style.display = 'inline';
-            if (themeIconLight) themeIconLight.style.display = 'none';
+    // Apply saved theme
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        if (icon) {
+            icon.className = 'fas fa-sun';
         }
     }
+
+    // Toggle theme on click
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-theme');
+
+            const isDark = body.classList.contains('dark-theme');
+
+            // Update icon
+            if (icon) {
+                icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Save preference
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            // Show notification
+            showNotification(
+                isDark ? 'Tryb ciemny włączony' : 'Tryb jasny włączony',
+                'success'
+            );
+        });
+    }
 });
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+
+    // Style the notification
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        padding: '12px 24px',
+        borderRadius: '8px',
+        color: 'white',
+        fontWeight: '500',
+        zIndex: '10000',
+        transform: 'translateX(100%)',
+        transition: 'transform 0.3s ease'
+    });
+
+    // Set background color based on type
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6'
+    };
+    notification.style.backgroundColor = colors[type] || colors.info;
+
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
 
 // Theme Toggle Functionality
 class ThemeToggle {
@@ -60,14 +105,14 @@ class ThemeToggle {
         const toggleContainer = document.createElement('div');
         toggleContainer.className = 'theme-toggle';
         toggleContainer.innerHTML = `
-            <button class="theme-toggle-btn ${this.currentTheme === 'light' ? 'active' : ''}" 
-                    id="light-btn" 
+            <button class="theme-toggle-btn ${this.currentTheme === 'light' ? 'active' : ''}"
+                    id="light-btn"
                     title="Tryb jasny"
                     aria-label="Przełącz na tryb jasny">
                 <i class="fas fa-sun"></i>
             </button>
-            <button class="theme-toggle-btn ${this.currentTheme === 'dark' ? 'active' : ''}" 
-                    id="dark-btn" 
+            <button class="theme-toggle-btn ${this.currentTheme === 'dark' ? 'active' : ''}"
+                    id="dark-btn"
                     title="Tryb ciemny"
                     aria-label="Przełącz na tryb ciemny">
                 <i class="fas fa-moon"></i>

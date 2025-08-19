@@ -446,44 +446,53 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        username_or_email = form.username_or_email.data.strip() if form.username_or_email.data else ''
-        password = form.password.data
+        try:
+            username_or_email = form.username_or_email.data.strip() if form.username_or_email.data else ''
+            password = form.password.data
 
-        print(f"🔍 Login attempt: {username_or_email}")
+            print(f"🔍 Login attempt: {username_or_email}")
 
-        # Find user by username or email
-        user = User.query.filter(
-            (db.func.lower(User.username) == username_or_email.lower()) |
-            (db.func.lower(User.email) == username_or_email.lower())).first()
+            # Find user by username or email
+            user = User.query.filter(
+                (db.func.lower(User.username) == username_or_email.lower()) |
+                (db.func.lower(User.email) == username_or_email.lower())).first()
 
-        print(f"🔍 User found: {bool(user)}")
-        if user:
-            print(f"🔍 User active: {user.is_active}")
-            print(f"🔍 Password check: {user.check_password(password)}")
+            print(f"🔍 User found: {bool(user)}")
+            if user:
+                print(f"🔍 User active: {user.is_active}")
+                print(f"🔍 Password check: {user.check_password(password)}")
 
-        if user and user.is_active and user.check_password(password):
-            # Update login statistics
-            user.update_login()
-            db.session.commit()
+            if user and user.is_active and user.check_password(password):
+                # Clear any existing session data first
+                session.clear()
+                
+                # Update login statistics
+                user.update_login()
+                db.session.commit()
 
-            # Login user
-            login_user(user, remember=form.remember_me.data)
+                # Login user with Flask-Login
+                login_user(user, remember=form.remember_me.data)
 
-            # Clear old session data and set new
-            session.permanent = True
-            session['logged_in_username'] = user.username
+                # Set session data
+                session.permanent = True
+                session['logged_in_username'] = user.username
+                session['user_id'] = user.id
 
-            print(f"✅ User {user.username} logged in successfully")
-            flash(f'Witaj ponownie, {user.username}!', 'success')
+                print(f"✅ User {user.username} logged in successfully")
+                flash(f'Witaj ponownie, {user.username}!', 'success')
 
-            # Redirect to next page or index
-            next_page = request.args.get('next')
-            if next_page and next_page.startswith('/'):
-                return redirect(next_page)
-            return redirect(url_for('index'))
-        else:
-            print(f"❌ Login failed for: {username_or_email}")
-            flash('Nieprawidłowa nazwa użytkownika/email lub hasło.', 'error')
+                # Redirect to next page or index
+                next_page = request.args.get('next')
+                if next_page and next_page.startswith('/'):
+                    return redirect(next_page)
+                return redirect(url_for('index'))
+            else:
+                print(f"❌ Login failed for: {username_or_email}")
+                flash('Nieprawidłowa nazwa użytkownika/email lub hasło.', 'error')
+                
+        except Exception as e:
+            print(f"❌ Login error: {str(e)}")
+            flash('Wystąpił błąd podczas logowania. Spróbuj ponownie.', 'error')
 
     return render_template('auth/login.html', form=form)
 
@@ -526,8 +535,16 @@ def register():
 @app.route('/logout')
 @login_required
 def logout():
-    logout_user()
-    flash('Zostałeś wylogowany.', 'info')
+    try:
+        # Clear session completely
+        session.clear()
+        # Logout user
+        logout_user()
+        flash('Zostałeś wylogowany.', 'info')
+    except Exception as e:
+        print(f"Logout error: {str(e)}")
+        flash('Wylogowano.', 'info')
+    
     return redirect(url_for('index'))
 
 
@@ -666,7 +683,7 @@ def about():
 @app.route('/debug-session')
 def debug_session():
     """Debug endpoint to check session state"""
-    if current_user.username != 'developer':
+    if not current_user.is_authenticated or current_user.username != 'developer':
         return "Access denied", 403
 
     debug_info = {
@@ -681,6 +698,15 @@ def debug_session():
     }
 
     return f"<pre>{json.dumps(debug_info, indent=2, default=str)}</pre>"
+
+@app.route('/clear-cache')
+def clear_cache():
+    """Clear all session data and cache"""
+    if current_user.is_authenticated and current_user.username == 'developer':
+        session.clear()
+        flash('Cache i sesja zostały wyczyszczone!', 'success')
+        return redirect(url_for('index'))
+    return "Access denied", 403
 
 
 @app.route('/privacy')

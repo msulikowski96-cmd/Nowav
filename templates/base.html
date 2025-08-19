@@ -86,12 +86,12 @@
 <body>
     <!-- Particle Background Effect -->
     <div class="particle-background"></div>
-    
+
     <!-- Floating Action Button -->
     <button class="fab" onclick="scrollToTop()" title="Scroll to top">
         <i class="fas fa-arrow-up"></i>
     </button>
-    
+
     <!-- Modern Navigation -->
     <header class="modern-header">
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -109,9 +109,8 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        {% if current_user.is_authenticated %}
-                            <!-- Status indicator -->
-                            <li class="nav-item">
+                        {% if current_user and current_user.is_authenticated %}
+                        <li class="nav-item">
                                 <span class="navbar-text me-3 d-flex align-items-center" style="color: rgba(255,255,255,0.95);">
                                     <i class="fas fa-circle me-2" style="font-size: 8px; color: #00ff88;"></i>
                                     <span style="color: #ffffff; font-weight: 500;">{{ current_user.get_full_name() or current_user.username }}</span>
@@ -189,7 +188,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        
+
                         <!-- Dark Mode Toggle -->
                         <li class="nav-item">
                             <button class="nav-link border-0 bg-transparent" id="theme-toggle" title="Przełącz motyw">
@@ -357,7 +356,7 @@
                 document.querySelector('.alert, .install-banner')?.remove();
             }
         };
-        
+
         // Scroll to top functionality
         function scrollToTop() {
             window.scrollTo({
@@ -365,7 +364,7 @@
                 behavior: 'smooth'
             });
         }
-        
+
         // Show/hide FAB based on scroll position
         window.addEventListener('scroll', function() {
             const fab = document.querySelector('.fab');
