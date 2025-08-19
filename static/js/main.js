@@ -654,6 +654,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Mobile menu handling
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    if (navbarToggler && navbarCollapse) {
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navbarToggler.contains(e.target) && !navbarCollapse.contains(e.target)) {
+                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                if (bsCollapse && navbarCollapse.classList.contains('show')) {
+                    bsCollapse.hide();
+                }
+            }
+        });
+
+        // Close mobile menu when clicking nav links
+        const navLinks = navbarCollapse.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                if (bsCollapse && navbarCollapse.classList.contains('show')) {
+                    bsCollapse.hide();
+                }
+            });
+        });
+    }
+
     // CV URL analysis - sprawdź czy element istnieje
     const analyzeUrlBtn = document.getElementById('analyze-url-btn');
     if (analyzeUrlBtn) {
