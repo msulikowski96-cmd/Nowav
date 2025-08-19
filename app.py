@@ -398,6 +398,10 @@ def index():
         if current_user.is_authenticated:
             session['logged_in_username'] = current_user.username
             session['user_id'] = current_user.id
+            # Set body class for proper styling
+            template_context['body_class'] = 'user-authenticated'
+        else:
+            template_context['body_class'] = 'user-not-authenticated'
 
         # Add debug info only for developer
         if current_user.is_authenticated and hasattr(
