@@ -1995,8 +1995,13 @@ input[type="file"]:hover {
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 280px;
 }
 
 .feature-card-modern:hover {
@@ -2049,6 +2054,11 @@ input[type="file"]:hover {
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.6;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: auto;
+    padding: 0 0.5rem;
 }
 
 /* Feature Cards */

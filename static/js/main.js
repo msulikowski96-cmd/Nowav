@@ -107,26 +107,72 @@ function initializeBootstrapComponents() {
 }
 
 function initializeMobileOptimizations() {
-    // Optimize for mobile devices
-    if (window.innerWidth <= 768) {
+    // Check for mobile device more reliably
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     window.innerWidth <= 768;
+    
+    if (isMobile) {
         document.body.classList.add('mobile-optimized');
 
-        // Improve touch targets
-        const buttons = document.querySelectorAll('button, .btn');
-        buttons.forEach(btn => {
-            if (btn.offsetHeight < 44) {
-                btn.style.minHeight = '44px';
-                btn.style.padding = '12px 16px';
+        // Improve touch targets with better checks
+        requestAnimationFrame(() => {
+            const buttons = document.querySelectorAll('button, .btn, .nav-link, .dropdown-item');
+            buttons.forEach(btn => {
+                if (btn.offsetHeight > 0 && btn.offsetHeight < 44) {
+                    btn.style.minHeight = '44px';
+                    btn.style.minWidth = '44px';
+                    btn.style.padding = '12px 16px';
+                }
+                
+                // Add touch-action for better touch handling
+                btn.style.touchAction = 'manipulation';
+            });
+        });
+
+        // Disable hover effects on mobile
+        document.addEventListener('touchstart', function() {
+            document.body.classList.add('touch-device');
+        }, { once: true });
+
+        // Improve form input handling
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            // Prevent zoom on focus for iOS
+            if (input.type !== 'file') {
+                input.style.fontSize = '16px';
+            }
+            
+            // Add proper mobile keyboard types
+            if (input.type === 'email') {
+                input.setAttribute('inputmode', 'email');
+            } else if (input.type === 'tel') {
+                input.setAttribute('inputmode', 'tel');
+            } else if (input.type === 'number') {
+                input.setAttribute('inputmode', 'numeric');
             }
         });
     }
 
-    // Handle orientation changes
+    // Handle orientation changes with debouncing
+    let orientationTimeout;
     window.addEventListener('orientationchange', function() {
-        setTimeout(() => {
-            window.scrollTo(0, 1);
+        clearTimeout(orientationTimeout);
+        orientationTimeout = setTimeout(() => {
+            // Fix viewport issues after orientation change
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+            }
+            
+            // Trigger resize event for components that need it
+            window.dispatchEvent(new Event('resize'));
         }, 500);
     });
+
+    // Handle safe area insets for modern mobile devices
+    if ('CSS' in window && CSS.supports('padding: env(safe-area-inset-top)')) {
+        document.documentElement.classList.add('safe-area-supported');
+    }
 }
 
 function initializePerformanceMonitoring() {
